@@ -1,0 +1,9 @@
+[Interface]
+PrivateKey = <%= client.private_key %>
+Address = <%= client.ip %>/24
+
+[Peer]
+PublicKey = <%= server.public_key %>
+EndPoint = <%= server.name %>:<%= server.port %>
+AllowedIPs = <%= server.network %>
+PersistentKeepalive = 25

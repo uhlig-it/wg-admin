@@ -1,0 +1,18 @@
+AllCops:
+  TargetRubyVersion: 2.7
+  Include:
+    - '**/Gemfile'
+    - '**/Rakefile'
+
+  DisplayCopNames:
+    Enabled: true
+
+  DisplayStyleGuide:
+    Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+Layout/LineLength:
+  Max: 180

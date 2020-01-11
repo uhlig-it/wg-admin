@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'wireguard/admin/version'
+
+begin
+  OptionParser.new do |parser|
+    parser.banner.prepend <<~BANNER
+      An opinionated tool to administer Wireguard configuration.
+
+    BANNER
+    parser.version = Wireguard::Admin::VERSION
+  end.parse!
+rescue StandardError
+  warn "Error - #{$ERROR_INFO}"
+  exit 1
+end
+
+if ARGV.size != 1
+  warn "Expected exactly one argument, but received #{ARGV.size}."
+  exit 1
+end
