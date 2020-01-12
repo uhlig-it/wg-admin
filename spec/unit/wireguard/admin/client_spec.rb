@@ -79,5 +79,12 @@ describe Wireguard::Admin::Client do
     expect(client.name).to eq('Alice')
   end
 
-  xcontext 'there is no `wg` in the path'
+  it 'has a string representation' do
+    expect(client.to_s).to include('Alice')
+    expect(client.to_s).to include('10.1.2.3')
+  end
+
+  context 'there is no `wg` in the path' do
+    it 'raises an error'
+  end
 end

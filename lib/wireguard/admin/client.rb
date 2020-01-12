@@ -46,6 +46,10 @@ module Wireguard
         @public_key ||= generate_public_key
       end
 
+      def to_s
+        "#{name}: #{ip}"
+      end
+
       private
 
       def generate_public_key

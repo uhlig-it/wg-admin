@@ -16,12 +16,28 @@ describe 'list', type: 'aruba' do
       expect(last_command_started).to be_successfully_executed
     end
 
-    it 'shows no error messages' do
+    it 'shows no errors' do
       expect(last_command_started.stderr).to be_empty
     end
 
     it 'prints the network' do
-      expect(last_command_started.stdout).to match(%r(10.0.0.0/8))
+      expect(last_command_started.stdout).to include('10.0.0.0/8')
+    end
+
+    context 'a client exists' do
+      before do
+        run_command 'wg-admin add-client --name Alice'
+        run_command 'wg-admin list'
+        stop_all_commands
+      end
+
+      it "lists the client's name" do
+        expect(last_command_started.stdout).to include('Alice')
+      end
+
+      it "lists the client's ip" do
+        expect(last_command_started.stdout).to include('10.0.0.1')
+      end
     end
   end
 end
