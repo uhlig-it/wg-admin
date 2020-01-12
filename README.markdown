@@ -5,24 +5,58 @@ author: Steffen Uhlig
 
 [![Build Status](https://travis-ci.org/suhlig/wireguard-admin.svg?branch=master)](https://travis-ci.org/suhlig/wireguard-admin)
 
-`wg-admin` is an opinionated command-line tool to administer [Wireguard](https://www.wireguard.com/) configuration.
+`wg-admin` is an opinionated command-line tool to administer [Wireguard](https://www.wireguard.com/) configuration files.
 
-# Create the initial config
+# Initialize
 
-Create the relay (bounce) server:
+The defining attribute of the configuration is a network. This is a range of IP addresses specified as `prefix/suffix`, e.g. `192.168.10.0/24` or `2001:0DB8:0:CD30::1/60`.
+
+If not specified, a default is used.
+
+Examples:
 
 ```command
-$ wgadmin init --name wg.example.com
+$ wgadmin init
+$ wgadmin init --network 192.168.10.0/24
 ```
 
-This command will add a new server to the database with the given name and a default configuration. Note that no config files are written yet; this is the subject of another [`command`](#generate-the-cpnfig-files).
+# Add a server
 
-# Addding a new client
+A `server` is a peer with a public DNS name that is reachable by all clients via public internet. It's the entry point for clients into the VPN (a.k.a. relay or bounce server).
 
-Let's call the client "Alice":
+Examples:
 
 ```command
-$ wgadmin add-client Alice --ip 192.168.20.11
+$ wgadmin add-server --name wg.example.com
+$ wgadmin add-server --name wg.example.com --ip 192.168.20.128
+```
+
+This command will add a new server with the given DNS name and a default configuration. If no IP was given, the first address in the network will be used.
+
+# Addding a client
+
+A `client` is regular peer that does not relay (bounce) traffic. It will connect to the VPN via a server.
+
+Examples:
+
+```command
+$ wgadmin add-client --name Alice
+$ wgadmin add-client --name Alice --ip 192.168.20.11
+```
+
+If no IP address was passed, the first available address in the network (after the server) will be used.
+
+# List
+
+```command
+$ wgadmin list
++================+========|=================|
+| Name           | Type   | IP Addresses    |
++================+========|=================|
+| wg.example.com | server | 192.168.20.1    |
++----------------+--------|-----------------|
+| Alice          | client | 192.168.20.11   |
++----------------+--------|-----------------|
 ```
 
 # Generate the config files
