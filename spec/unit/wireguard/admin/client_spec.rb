@@ -6,8 +6,6 @@ describe Wireguard::Admin::Client do
   let(:args) { {
       name: 'Alice',
       ip: '10.1.2.3',
-      private_key: 'keep-it-super-s3cret',
-      public_key: 'share-it-widely',
     }
   }
 
@@ -52,7 +50,10 @@ describe Wireguard::Admin::Client do
 
     context 'private_key is nil' do
       before { args[:private_key] = nil }
-      it_behaves_like('requiring valid args', /present/)
+
+      it 'generates the private key' do
+        expect(client.private_key).to_not be_empty
+      end
     end
 
     context 'private_key is empty' do
@@ -62,7 +63,10 @@ describe Wireguard::Admin::Client do
 
     context 'public_key is nil' do
       before { args[:public_key] = nil }
-      it_behaves_like('requiring valid args', /present/)
+
+      it 'generates the public key from the private one' do
+        expect(client.public_key).to_not be_empty
+      end
     end
 
     context 'public_key is empty' do

@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.version       = Wireguard::Admin::VERSION
   spec.authors       = ['Steffen Uhlig']
   spec.email         = ['steffen@familie-uhlig.net']
+  spec.homepage      = 'https://github.com/suhlig/wireguard-admin'
 
   spec.summary       = 'Wireguard administration tool'
   spec.description   = %(wireguard-admin is an administration tool for Wireguard configuration.)
