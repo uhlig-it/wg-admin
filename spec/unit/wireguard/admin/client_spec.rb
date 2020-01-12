@@ -79,7 +79,5 @@ describe Wireguard::Admin::Client do
     expect(client.name).to eq('Alice')
   end
 
-  xcontext 'there is no `wg` in the path' do
-
-  end
+  xcontext 'there is no `wg` in the path'
 end

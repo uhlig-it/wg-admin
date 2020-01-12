@@ -27,6 +27,10 @@ module Wireguard
         end
       end
 
+      def peers
+        []
+      end
+
       private
 
       def backend

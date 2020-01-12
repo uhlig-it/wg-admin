@@ -31,8 +31,13 @@ Available'
       def list
         warn "Using #{repository.path}" if options[:verbose]
         puts "Network: #{repository.network}"
+
         puts
+
         puts "Peers:"
+        repository.peers.each do |peer|
+          puts peer
+        end
       end
 
       private
