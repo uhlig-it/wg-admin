@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     wireguard-admin (0.0.1)
+      thor
 
 GEM
   remote: https://rubygems.org/
