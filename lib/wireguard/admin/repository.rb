@@ -1,8 +1,6 @@
 require 'pstore'
 require 'ipaddr'
 
-require 'wireguard/admin/client'
-
 module Wireguard
   module Admin
     class Repository
@@ -43,17 +41,17 @@ module Wireguard
         end
       end
 
-      def add_client(name:, ip:)
-        ip = ip || find_next_ip_address
-
-        client = Client.new(name: name, ip: ip)
-
+      def add_peer(peer)
         backend.transaction do
           tree[:peers] = Array.new unless tree[:peers]
-          tree[:peers] << client
+          tree[:peers] << peer
         end
+      end
 
-        client
+      def next_ip_address
+        peers.inject(network.succ) do |candidate, peer|
+          candidate == peer.ip ? candidate.succ : peer.ip
+        end
       end
 
       private
@@ -65,16 +63,6 @@ module Wireguard
       def tree(namespace = 'default')
         backend[namespace] = Hash.new unless backend[namespace]
         backend[namespace]
-      end
-
-      def find_next_ip_address
-        first = network.succ
-
-#        backend.transaction do
-          peers.inject(first) do |candidate, peer|
-             candidate == peer.ip ? candidate.succ : peer.ip
-          end
-#        end
       end
     end
   end

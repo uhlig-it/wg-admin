@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'aruba/rspec'
+require 'tempfile'
 
 describe 'init', type: 'aruba' do
   before do
-    ENV['WG_ADMIN_STORE'] = Tempfile.new('wg-admin system test').path
-    run_command "wg-admin init #{args}"
+    set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
+    run_command_and_stop "wg-admin init #{args}"
   end
 
   context 'without arguments' do
@@ -16,7 +16,6 @@ describe 'init', type: 'aruba' do
     end
 
     it 'is silent' do
-      last_command_started.stop
       expect(last_command_started.stderr).to be_empty
       expect(last_command_started.stdout).to be_empty
     end
@@ -25,7 +24,6 @@ describe 'init', type: 'aruba' do
       let(:args) { '--verbose' }
 
       it 'prints a message' do
-        last_command_started.stop
         expect(last_command_started.stdout).to be_empty
         expect(last_command_started.stderr).to match(%r(10.0.0.0/8))
       end
@@ -40,7 +38,6 @@ describe 'init', type: 'aruba' do
     end
 
     it 'is silent' do
-      last_command_started.stop
       expect(last_command_started.stderr).to be_empty
       expect(last_command_started.stdout).to be_empty
     end
@@ -49,7 +46,6 @@ describe 'init', type: 'aruba' do
       let(:args) { '--network 192.168.10.0/24 --verbose' }
 
       it 'prints a message' do
-        last_command_started.stop
         expect(last_command_started.stdout).to be_empty
         expect(last_command_started.stderr).to match(%r(192.168.10.0/24))
       end

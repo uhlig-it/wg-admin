@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require 'thor'
+
 require 'wireguard/admin/repository'
+require 'wireguard/admin/client'
+require 'wireguard/admin/server'
 
 module Wireguard
   module Admin
@@ -10,15 +13,15 @@ module Wireguard
         true
       end
 
+      class_option :verbose, type: :boolean, aliases: '-v'
       package_name 'wg-admin is an opinionated tool to administer Wireguard configuration.
 
 Available'
-      class_option :verbose, type: :boolean, aliases: '-v'
 
       desc 'init', 'Adds a new server'
       long_desc "Initializes the configuration database with a new network."
       method_option :network,
-        desc: 'the DNS name of the new server',
+        desc: 'network range',
         aliases: '-n',
         default: '10.0.0.0/8'
       def init
@@ -35,8 +38,44 @@ Available'
         puts
         puts "Peers:"
         repository.peers.each do |peer|
-          puts "\t#{peer}"
+          puts "  #{peer}"
         end
+      rescue Repository::NotInitializedError
+        warn "Error: #{$!.message}. Run wg-admin init to fix this."
+      end
+
+      desc 'add-server', 'Adds a new server'
+      long_desc "Adds a new server to the configuration database."
+      method_option :name,
+        desc: 'the public DNS name of the new server',
+        aliases: '-n',
+        required: true
+      method_option :ip,
+        desc: 'the (private) IP address of the new server (within the VPN)',
+        aliases: '-i',
+        required: false
+      method_option :allowed_ips,
+        desc: 'The range of allowed IP addresses that this server is routing',
+        aliases: '-a',
+        required: false
+      method_option :device,
+        desc: 'The network device used for forwarding traffic',
+        aliases: '-d',
+        required: false
+      def add_server
+        warn "Using #{repository.path}" if options[:verbose]
+        ip = options[:ip] || repository.next_ip_address
+        server = Server.new(name: options[:name], ip: ip)
+        server.allowed_ips = options[:allowed_ips] if options[:allowed_ips]
+        server.device = options[:device] if options[:device]
+        repository.add_peer(server)
+        if options[:verbose]
+          warn "New server was successfully added:"
+          warn ''
+          warn server
+        end
+      rescue Repository::NotInitializedError
+        warn "Error: #{$!.message}. Run wg-admin init to fix this."
       end
 
       desc 'add-client', 'Adds a new client'
@@ -51,8 +90,14 @@ Available'
         required: false
       def add_client
         warn "Using #{repository.path}" if options[:verbose]
-        result = repository.add_client(name: options[:name], ip: options[:ip])
-        warn "New client #{result} was successfully added." if options[:verbose]
+        ip = options[:ip] || repository.next_ip_address
+        client = Client.new(name: options[:name], ip: ip)
+        repository.add_peer(client)
+        if options[:verbose]
+          warn "New client was successfully added:"
+          warn ''
+          warn client
+        end
       rescue Repository::NotInitializedError
         warn "Error: #{$!.message}. Run wg-admin init to fix this."
       end

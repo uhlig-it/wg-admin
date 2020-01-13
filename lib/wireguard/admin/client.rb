@@ -17,6 +17,7 @@ module Wireguard
 
     class Client
       attr_reader :name, :ip
+      attr_accessor :private_key, :public_key
 
       def initialize(name:, ip:, private_key: nil, public_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
@@ -47,7 +48,7 @@ module Wireguard
       end
 
       def to_s
-        "#{name}: #{ip}"
+        "#{self.class.name.split('::').last} #{name}: #{ip}"
       end
 
       private

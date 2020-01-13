@@ -5,5 +5,5 @@ Address = <%= client.ip %>/24
 [Peer]
 PublicKey = <%= server.public_key %>
 EndPoint = <%= server.name %>:<%= server.port %>
-AllowedIPs = <%= server.network %>
+AllowedIPs = <%= server.allowed_ips %>
 PersistentKeepalive = 25

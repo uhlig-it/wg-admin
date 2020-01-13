@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'aruba/rspec'
 require 'tempfile'
 
 describe 'list', type: 'aruba' do
   context 'with initialization' do
     before do
-      ENV['WG_ADMIN_STORE'] = Tempfile.new('wg-admin system test').path
-      run_command 'wg-admin init'
-      run_command 'wg-admin list'
-      stop_all_commands
+      set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
+      run_command_and_stop 'wg-admin init'
+      run_command_and_stop 'wg-admin list'
     end
 
     it 'succeeds' do
@@ -26,9 +24,8 @@ describe 'list', type: 'aruba' do
 
     context 'a client exists' do
       before do
-        run_command 'wg-admin add-client --name Alice'
-        run_command 'wg-admin list'
-        stop_all_commands
+        run_command_and_stop 'wg-admin add-client --name Alice'
+        run_command_and_stop 'wg-admin list'
       end
 
       it "lists the client's name" do

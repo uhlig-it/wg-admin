@@ -2,7 +2,7 @@
 
 require 'tempfile'
 
-describe 'add-client', type: 'aruba' do
+describe 'add-server', type: 'aruba' do
   context 'without initialization' do
     it 'raises an error'
   end
@@ -11,7 +11,7 @@ describe 'add-client', type: 'aruba' do
     before do
       set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
       run_command_and_stop 'wg-admin init --network 192.168.10.0/24'
-      run_command_and_stop 'wg-admin add-client --name Alice'
+      run_command_and_stop 'wg-admin add-server --name wg.example.com'
     end
 
     it 'succeeds' do
