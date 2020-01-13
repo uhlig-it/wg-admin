@@ -31,7 +31,7 @@ $ wgadmin add-server --name wg.example.com
 $ wgadmin add-server --name wg.example.com --ip 192.168.20.128
 ```
 
-This command will add a new server with the given DNS name and a default configuration. If no IP was given, the first address in the network will be used.
+This command will add a new server with the given DNS name and a default configuration. If no IP address was passed, the next available address in the network will be used. When no port was specified, the de-facto standard port for Wireguard will be used (`51820`).
 
 # Addding a client
 
@@ -44,7 +44,7 @@ $ wgadmin add-client --name Alice
 $ wgadmin add-client --name Alice --ip 192.168.20.11
 ```
 
-If no IP address was passed, the first available address in the network (after the server) will be used.
+If no IP address was passed, the next available address in the network will be used.
 
 # List
 
@@ -59,7 +59,15 @@ $ wgadmin list
 +----------------+--------|-----------------|
 ```
 
-# Generate the config files
+Likewise, `wgadmin list --clients` will list all clients. If this command is run without a (pseudo) terminal, it will print the name of each client on a single line, which allows for a convenient loop over all clients, e.g.:
+
+```command
+$ for name in $(wgadmin list --clients); do
+  wgadmin config --client="$name" > "$name".conf
+done
+```
+
+# Generating the config files
 
 ## Server
 
@@ -78,9 +86,7 @@ PublicKey = public-key-of-Alice=
 AllowedIPs = 192.168.20.11/32
 ```
 
-The server will be assigned the first available address of the specified network (if none was set, a default is chosen). Since no port was specified, the de-facto standard port for Wireguard will be used (`51820`).
-
-Each client will be assigned a unique IP address within the range of the specified network.
+Note that this command may fail if more than one server is defined. In this case, specify the desired server with `--server=wg.example.com`.
 
 ## Client
 
