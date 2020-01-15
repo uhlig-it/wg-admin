@@ -4,9 +4,21 @@ require 'ipaddr'
 module Wireguard
   module Admin
     class Repository
-      class NotInitializedError < StandardError
+      class NetworkNotSpecified < StandardError
         def initialize
-          super('wg-admin was not properly initialized')
+           super("Network not specified")
+        end
+      end
+
+      class UnknownNetwork < StandardError
+        def initialize(unknown)
+          super("Network #{unknown} is unknown")
+        end
+      end
+
+      class NetworkAlreadyExists < StandardError
+        def initialize(existing)
+          super("Network #{existing} already exists")
         end
       end
 
@@ -14,55 +26,60 @@ module Wireguard
 
       def initialize(path)
         @path = path
+        @backend = PStore.new(@path)
       end
 
-      def network
-        backend.transaction do
-          tree[:network].tap do |result|
-            raise NotInitializedError unless result
-          end
+      def networks
+        @backend.transaction do
+          @backend.roots
         end
       end
 
-      def network=(nw)
-        backend.transaction do
-          if nw.is_a?(IPAddr)
-            tree[:network] = nw
-          else
-            tree[:network] = IPAddr.new(nw)
-          end
+      def peers(nw)
+        network = network(nw)
+
+        @backend.transaction do
+          raise UnknownNetwork.new(network) unless @backend.root?(network)
+          @backend[network]
         end
       end
 
-      def peers
-        backend.transaction do
-          tree[:peers] = Array.new unless tree[:peers]
-          tree[:peers]
+      def add_network(nw)
+        network = network(nw)
+        @backend.transaction do
+          raise NetworkAlreadyExists.new(network) if @backend.root?(network)
+          @backend[network] = Array.new
         end
       end
 
-      def add_peer(peer)
-        backend.transaction do
-          tree[:peers] = Array.new unless tree[:peers]
-          tree[:peers] << peer
+      def add_peer(nw, peer)
+        network = network(nw)
+
+        @backend.transaction do
+          raise UnknownNetwork.new(network) unless @backend.root?(network)
+          @backend[network] << peer
         end
       end
 
-      def next_ip_address
-        peers.inject(network.succ) do |candidate, peer|
+      # Find the next address within the given network that is not assigned to a peer
+      def next_address(nw)
+        network = network(nw)
+
+        peers(network).inject(network.succ) do |candidate, peer|
           candidate == peer.ip ? candidate.succ : peer.ip
         end
       end
 
       private
 
-      def backend
-        @backend ||= PStore.new(@path)
-      end
+      def network(nw)
+        raise NetworkNotSpecified unless nw
 
-      def tree(namespace = 'default')
-        backend[namespace] = Hash.new unless backend[namespace]
-        backend[namespace]
+        if nw.is_a?(IPAddr)
+          nw
+        else
+          IPAddr.new(nw)
+        end
       end
     end
   end
