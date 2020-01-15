@@ -35,6 +35,10 @@ module Wireguard
         end
       end
 
+      def find_peer(nw, name)
+        peers(nw).select { |p| p.name == name}.first
+      end
+
       def peers(nw)
         network = network(nw)
 

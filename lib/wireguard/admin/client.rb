@@ -58,7 +58,7 @@ module Wireguard
           stdin.write(private_key)
           stdin.close
           raise InvocationError.new(stderr.lines) unless waiter.value.success?
-          stdout.read
+          stdout.read.chomp
         end
       rescue SystemCallError
         if $!.message =~ /No such file or directory/
@@ -71,7 +71,7 @@ module Wireguard
       def generate_private_key
         Open3.popen3('wg genkey') do |_, stdout, stderr, waiter|
           raise InvocationError.new(stderr.lines) unless waiter.value.success?
-          stdout.read
+          stdout.read.chomp
         end
       rescue SystemCallError
         if $!.message =~ /No such file or directory/

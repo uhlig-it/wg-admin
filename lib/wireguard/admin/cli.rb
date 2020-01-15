@@ -5,6 +5,7 @@ require 'thor'
 require 'wireguard/admin/repository'
 require 'wireguard/admin/client'
 require 'wireguard/admin/server'
+require 'wireguard/admin/templates/client'
 
 module Wireguard
   module Admin
@@ -85,6 +86,18 @@ Available'
           warn ''
           warn client
         end
+      rescue Repository::NetworkNotSpecified, Repository::UnknownNetwork
+        warn "Error: #{$!.message}"
+      end
+
+      desc 'config', 'Show the configuration of a peer'
+      long_desc 'Prints the configuration for a peer to STDOUT.'
+      method_option :network, desc: 'network', aliases: '-n', default: ENV['WG_ADMIN_NETWORK']
+      def config(name)
+        warn "Using database from #{repository.path}" if options[:verbose]
+        peer = repository.find_peer(options[:network], name)
+        servers = []
+        puts Templates::Client.new(peer, servers).render
       rescue Repository::NetworkNotSpecified, Repository::UnknownNetwork
         warn "Error: #{$!.message}"
       end
