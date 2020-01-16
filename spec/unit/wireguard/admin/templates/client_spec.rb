@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 require 'wireguard/admin/templates/client'
 require 'wireguard/admin/client'
 
@@ -8,7 +10,7 @@ describe Wireguard::Admin::Templates::Client do
     let(:client) { instance_double(
         Wireguard::Admin::Client,
         private_key: 'foobar',
-        ip: '1.2.3.4'
+        ip: IPAddr.new('1.2.3.4')
       )
     }
     let(:servers) { [] }

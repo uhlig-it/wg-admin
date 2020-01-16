@@ -1,11 +1,12 @@
 require 'wireguard/admin/client'
+require 'ipaddr'
 
 describe Wireguard::Admin::Client do
   subject(:client) { described_class.new(**args) }
 
   let(:args) { {
       name: 'Alice',
-      ip: '10.1.2.3',
+      ip: IPAddr.new('10.1.2.3'),
     }
   }
 
@@ -33,19 +34,6 @@ describe Wireguard::Admin::Client do
     context 'ip is nil' do
       before { args[:ip] = nil }
       it_behaves_like('requiring valid args', /present/)
-    end
-
-    context 'ip is invalid' do
-      before { args[:ip] = '1.2.3' }
-      it_behaves_like('requiring valid args', /invalid/)
-    end
-
-    context 'ip is an IPAddr object' do
-      before { args[:ip] = IPAddr.new(args[:ip]) }
-
-      it 'has the proper ip assigned' do
-        expect(client.ip).to eq('10.1.2.3')
-      end
     end
 
     context 'private_key is nil' do

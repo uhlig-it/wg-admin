@@ -1,7 +1,8 @@
+require 'tempfile'
+require 'ipaddr'
+
 require 'wireguard/admin/repository'
 require 'wireguard/admin/client'
-
-require 'tempfile'
 
 describe Wireguard::Admin::Repository do
   subject(:repo) { described_class.new( Tempfile.new('wg-admin unit test').path ) }
@@ -12,34 +13,41 @@ describe Wireguard::Admin::Repository do
     end
 
     it 'does not accept a new peer' do
-      expect { repo.add_peer('10.1.2.0', 'somebody') }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
+      expect { repo.add_peer(IPAddr.new('10.1.2.0'), 'somebody') }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
     end
 
     it 'does not provide the next address' do
-      expect { repo.next_address('10.1.2.0') }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
+      expect { repo.next_address(IPAddr.new('10.1.2.0')) }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
     end
   end
 
   context 'network 10.1.2.0/24 was added' do
-    before { repo.add_network('10.1.2.0/24') }
+    let(:network) { IPAddr.new('10.1.2.0/24') }
+    before { repo.add_network(network) }
 
     it 'lists the existing network' do
-      expect(repo.networks).to include('10.1.2.0/24')
+      expect(repo.networks).to include(network)
+    end
+
+    it 'finds the existing network' do
+      expect(repo.find_network(network)).to eq(network)
     end
 
     it 'does provide the next address' do
-      expect(repo.next_address('10.1.2.0/24')).to eq('10.1.2.1')
+      expect(repo.next_address(network)).to eq('10.1.2.1')
     end
+
+    it 'refuses to add another peer with the same name to a network'
 
     context 'a peer exists within the known network' do
       let(:peer) { Wireguard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
 
       before do
-        repo.add_peer('10.1.2.0/24', peer)
+        repo.add_peer(network, peer)
       end
 
       it 'knows about the new peer' do
-        expect(repo.find_peer('10.1.2.11/24', 'somebody')).to be
+        expect(repo.find_peer(IPAddr.new('10.1.2.11/24'), 'somebody')).to be
       end
     end
   end

@@ -5,7 +5,15 @@ module Wireguard
     class Server < Client
       attr_accessor :port, :allowed_ips, :device
 
-      def initialize(name:, ip:, private_key: nil, public_key: nil, port: 51820, allowed_ips: '10.0.0.0/8', device: 'eth0')
+      def initialize(
+          name:,
+          ip:,
+          private_key: nil,
+          public_key: nil,
+          port: 51820,
+          allowed_ips: ,
+          device: 'eth0'
+        )
         super(name: name, ip: ip, private_key: private_key, public_key: public_key)
 
         raise ArgumentError, 'port must be present' if port.nil?
@@ -21,11 +29,8 @@ module Wireguard
       end
 
       def allowed_ips=(aips)
-        if aips.is_a?(IPAddr)
-          @allowed_ips = aips
-        else
-          @allowed_ips = IPAddr.new(aips)
-        end
+        raise ArgumentError, 'ip must be an IP address with prefix' unless aips.is_a?(IPAddr)
+        @allowed_ips = aips
       end
 
       def to_s

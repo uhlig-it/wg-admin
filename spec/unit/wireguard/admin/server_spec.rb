@@ -1,11 +1,13 @@
 require 'wireguard/admin/server'
+require 'ipaddr'
 
 describe Wireguard::Admin::Server do
   subject(:client) { described_class.new(**args) }
 
   let(:args) { {
       name: 'wg.example.com',
-      ip: '10.1.2.3',
+      ip: IPAddr.new('10.1.2.3'),
+      allowed_ips: IPAddr.new('10.1.2.3/8'),
     }
   }
 
@@ -56,20 +58,12 @@ describe Wireguard::Admin::Server do
   end
 
   context 'no allowed_ips provided' do
-    it 'has the default allowed_ips' do
+    xit 'allows the whole network' do
       expect(client.allowed_ips).to eq('10.0.0.0/8')
     end
   end
 
   context 'allowed_ips IS provided' do
-    before { args[:allowed_ips] = '192.168.100.0/24' }
-
-    it 'has the provided allowed_ips' do
-      expect(client.allowed_ips).to eq('192.168.100.0/24')
-    end
-  end
-
-  context 'allowed_ips is an IPAddr object' do
     before { args[:allowed_ips] = IPAddr.new('10.11.0.0/16') }
 
     it 'has the proper allowed_ips assigned' do

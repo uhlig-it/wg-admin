@@ -1,4 +1,3 @@
-require 'ipaddr'
 require 'open3'
 
 module Wireguard
@@ -25,12 +24,7 @@ module Wireguard
         @name = name
 
         raise ArgumentError, 'ip must be present' if ip.nil?
-
-        if ip.is_a?(IPAddr)
-          @ip = ip
-        else
-          @ip = IPAddr.new(ip)
-        end
+        @ip = ip
 
         raise ArgumentError, 'public_key must not be empty' if public_key && public_key.empty?
         @public_key = public_key
