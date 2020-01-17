@@ -95,6 +95,14 @@ module Wireguard
           candidate == peer.ip ? candidate.succ : peer.ip
         end
       end
+
+      def servers(network)
+        peers(network).select { |p| p.is_a?(Server) }
+      end
+
+      def clients(network)
+        peers(network).select { |p| p.is_a?(Client) }
+      end
     end
   end
 end

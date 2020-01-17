@@ -15,8 +15,7 @@ module Wireguard
     end
 
     class Client
-      attr_reader :name, :ip
-      attr_accessor :private_key, :public_key
+      attr_reader :name, :ip, :private_key, :public_key
 
       def initialize(name:, ip:, private_key: nil, public_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
@@ -26,23 +25,27 @@ module Wireguard
         raise ArgumentError, 'ip must be present' if ip.nil?
         @ip = ip
 
-        raise ArgumentError, 'public_key must not be empty' if public_key && public_key.empty?
-        @public_key = public_key
-
         raise ArgumentError, 'private_key must not be empty' if private_key && private_key.empty?
-        @private_key = private_key
-      end
+        @private_key = private_key || generate_private_key
 
-      def private_key
-        @private_key ||= generate_private_key
-      end
-
-      def public_key
-        @public_key ||= generate_public_key
+        raise ArgumentError, 'public_key must not be empty' if public_key && public_key.empty?
+        @public_key = public_key || generate_public_key
       end
 
       def to_s
         "#{self.class.name.split('::').last} #{name}: #{ip}"
+      end
+
+      def hash
+        name.hash
+      end
+
+      def eql?(other)
+        hash == other.hash
+      end
+
+      def ==(other)
+        name == other.name
       end
 
       private

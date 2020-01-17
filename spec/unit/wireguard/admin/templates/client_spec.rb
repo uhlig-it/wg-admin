@@ -9,6 +9,7 @@ describe Wireguard::Admin::Templates::Client do
   context 'no servers' do
     let(:client) { instance_double(
         Wireguard::Admin::Client,
+        name: 'unit test',
         private_key: 'foobar',
         ip: IPAddr.new('1.2.3.4')
       )

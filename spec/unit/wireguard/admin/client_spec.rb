@@ -67,6 +67,24 @@ describe Wireguard::Admin::Client do
     expect(client.name).to eq('Alice')
   end
 
+  describe 'another client' do
+    context 'with the same args' do
+      let(:other) { described_class.new(**args) }
+
+      it 'is the same object' do
+        expect(client).to eq(other)
+      end
+
+      context 'but a different name' do
+        let(:other) { described_class.new(**args.merge(name: 'Other Alice')) }
+
+        it 'is another object' do
+          expect(client).to_not eq(other)
+        end
+      end
+    end
+  end
+
   it 'has a string representation' do
     expect(client.to_s).to include('Alice')
     expect(client.to_s).to include('10.1.2.3')

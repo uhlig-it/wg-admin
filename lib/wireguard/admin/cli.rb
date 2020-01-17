@@ -7,6 +7,7 @@ require 'wireguard/admin/repository'
 require 'wireguard/admin/client'
 require 'wireguard/admin/server'
 require 'wireguard/admin/templates/client'
+require 'wireguard/admin/templates/server'
 
 module Wireguard
   module Admin
@@ -109,9 +110,17 @@ Available'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       def config(name)
         warn "Using database from #{repository.path}" if options[:verbose]
-        peer = repository.find_peer(IPAddr.new(options[:network]), name)
-        servers = []
-        puts Templates::Client.new(peer, servers).render
+        network = IPAddr.new(options[:network])
+        peer = repository.find_peer(network, name)
+
+        case peer
+        when Server
+          puts Templates::Server.new(peer, repository.clients(network)).render
+        when Client
+          puts Templates::Client.new(peer, repository.servers(network)).render
+        else
+          raise "No template defined for #{peer}"
+        end
       rescue
         warn "Error: #{$!.message}"
       end

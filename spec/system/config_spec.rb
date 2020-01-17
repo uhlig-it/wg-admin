@@ -31,7 +31,15 @@ describe 'config', type: 'aruba' do
       expect(last_command_started.stdout).to include('Address = 192.168.42.1/24')
     end
 
-    it "prints the server's ListenPort"
+    it "prints the server's ListenPort" do
+      run_command_and_stop 'wg-admin config wg.example.com'
+      expect(last_command_started.stdout).to include('ListenPort = 51820')
+    end
+
     it "prints the server's PrivateKey"
+    it 'refuses to print the config of a non-existing server'
   end
+
+  context 'a client exists'
+  context 'a server and multiple clients exist'
 end

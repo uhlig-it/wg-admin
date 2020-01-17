@@ -39,16 +39,25 @@ describe Wireguard::Admin::Repository do
 
     it 'refuses to add another peer with the same name to a network'
 
-    context 'a peer exists within the known network' do
+    context 'a client exists within the known network' do
       let(:peer) { Wireguard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
 
       before do
         repo.add_peer(network, peer)
       end
 
-      it 'knows about the new peer' do
+      it 'knows it as peer' do
         expect(repo.find_peer(IPAddr.new('10.1.2.11/24'), 'somebody')).to be
       end
+
+      it 'lists it as client' do
+        expect(repo.clients(network)).to include(peer)
+      end
+    end
+
+    context 'a server exists within the known network' do
+      it 'knows it as peer'
+      it 'lists it as server'
     end
   end
 end
