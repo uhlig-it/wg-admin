@@ -1,20 +1,34 @@
+# frozen_string_literal: true
+
 require 'pstore'
 
 module Wireguard
   module Admin
+    #
+    # The place where networks, clients and servers can be found and are persisted
+    #
     class Repository
+      #
+      # Raised if the network was not specified
+      #
       class NetworkNotSpecified < StandardError
         def initialize
-           super("Network not specified")
+          super('Network not specified')
         end
       end
 
+      #
+      # Raised if the network is not known
+      #
       class UnknownNetwork < StandardError
         def initialize(unknown)
           super("Network #{unknown} is unknown")
         end
       end
 
+      #
+      # Raised if the network already exists
+      #
       class NetworkAlreadyExists < StandardError
         def initialize(existing)
           super("Network #{existing} already exists")
@@ -42,7 +56,8 @@ module Wireguard
       #
       def find_network(network)
         raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
-        networks.select { |n| n == network}.first
+
+        networks.select { |n| n == network }.first
       end
 
       #
@@ -50,7 +65,8 @@ module Wireguard
       #
       def find_peer(network, name)
         raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
-        peers(network).select { |p| p.name == name}.first
+
+        peers(network).select { |p| p.name == name }.first
       end
 
       #
@@ -58,8 +74,10 @@ module Wireguard
       #
       def peers(network)
         raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
+
         @backend.transaction do
-          raise UnknownNetwork.new(network) unless @backend.root?(network)
+          raise UnknownNetwork, network unless @backend.root?(network)
+
           @backend[network]
         end
       end
@@ -69,9 +87,11 @@ module Wireguard
       #
       def add_network(network)
         raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
+
         @backend.transaction do
-          raise NetworkAlreadyExists.new(network) if @backend.root?(network)
-          @backend[network] = Array.new
+          raise NetworkAlreadyExists, network if @backend.root?(network)
+
+          @backend[network] = []
         end
       end
 
@@ -80,7 +100,8 @@ module Wireguard
       #
       def add_peer(network, peer)
         @backend.transaction do
-          raise UnknownNetwork.new(network) unless @backend.root?(network)
+          raise UnknownNetwork, network unless @backend.root?(network)
+
           @backend[network] << peer
         end
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ipaddr'
 
 require 'wireguard/admin/templates/client'
@@ -6,14 +8,15 @@ require 'wireguard/admin/client'
 describe Wireguard::Admin::Templates::Client do
   subject(:template) { described_class.new(client, servers) }
 
-  context 'no servers' do
-    let(:client) { instance_double(
+  context 'with no servers' do
+    let(:client) do
+      instance_double(
         Wireguard::Admin::Client,
         name: 'unit test',
         private_key: 'foobar',
         ip: IPAddr.new('1.2.3.4')
       )
-    }
+    end
     let(:servers) { [] }
 
     it 'has an Interface section' do

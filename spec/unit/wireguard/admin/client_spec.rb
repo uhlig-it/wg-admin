@@ -1,64 +1,74 @@
+# frozen_string_literal: true
+
 require 'wireguard/admin/client'
 require 'ipaddr'
 
 describe Wireguard::Admin::Client do
   subject(:client) { described_class.new(**args) }
 
-  let(:args) { {
+  let(:args) do
+    {
       name: 'Alice',
-      ip: IPAddr.new('10.1.2.3'),
+      ip: IPAddr.new('10.1.2.3')
     }
-  }
+  end
 
   describe 'instantiation' do
-    context 'name is missing' do
+    context 'when the name is missing' do
       before { args.delete(:name) }
+
       it_behaves_like('requiring valid args')
     end
 
-    context 'name is nil' do
+    context 'when the name is nil' do
       before { args[:name] = nil }
+
       it_behaves_like('requiring valid args', /present/)
     end
 
-    context 'name is empty' do
+    context 'when the name is empty' do
       before { args[:name] = '' }
+
       it_behaves_like('requiring valid args', /empty/)
     end
 
-    context 'ip is missing' do
+    context 'when the ip is missing' do
       before { args.delete(:ip) }
+
       it_behaves_like('requiring valid args')
     end
 
-    context 'ip is nil' do
+    context 'when the ip is nil' do
       before { args[:ip] = nil }
+
       it_behaves_like('requiring valid args', /present/)
     end
 
-    context 'private_key is nil' do
+    context 'when the private_key is nil' do
       before { args[:private_key] = nil }
 
       it 'generates the private key' do
-        expect(client.private_key).to_not be_empty
+        expect(client.private_key).not_to be_empty
       end
     end
 
-    context 'private_key is empty' do
+    context 'when the private_key is empty' do
       before { args[:private_key] = '' }
+
       it_behaves_like('requiring valid args', /empty/)
     end
 
-    context 'public_key is nil' do
+    context 'when the public_key is nil' do
       before { args[:public_key] = nil }
 
       it 'generates the public key from the private one' do
-        expect(client.public_key).to_not be_empty
+        expect(client.public_key).not_to be_empty
       end
     end
 
-    context 'public_key is empty' do
+    context 'when the public_key is empty' do
       before { args[:public_key] = '' }
+
       it_behaves_like('requiring valid args', /empty/)
     end
   end
@@ -68,29 +78,34 @@ describe Wireguard::Admin::Client do
   end
 
   describe 'another client' do
-    context 'with the same args' do
+    context 'when the args are the same' do
       let(:other) { described_class.new(**args) }
 
       it 'is the same object' do
         expect(client).to eq(other)
       end
+    end
 
-      context 'but a different name' do
-        let(:other) { described_class.new(**args.merge(name: 'Other Alice')) }
+    context 'when the name is different' do
+      let(:other) { described_class.new(**args.merge(name: 'Other Alice')) }
 
-        it 'is another object' do
-          expect(client).to_not eq(other)
-        end
+      it 'is another object' do
+        expect(client).not_to eq(other)
       end
     end
   end
 
-  it 'has a string representation' do
-    expect(client.to_s).to include('Alice')
-    expect(client.to_s).to include('10.1.2.3')
+  describe 'the string representation' do
+    it 'has the name' do
+      expect(client.to_s).to include('Alice')
+    end
+
+    it 'has the IP address' do
+      expect(client.to_s).to include('10.1.2.3')
+    end
   end
 
-  context 'there is no `wg` in the path' do
+  context 'when the there is no `wg` in the path' do
     it 'raises an error'
   end
 end

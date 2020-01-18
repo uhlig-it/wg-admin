@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tempfile'
 require 'ipaddr'
 
@@ -5,9 +7,9 @@ require 'wireguard/admin/repository'
 require 'wireguard/admin/client'
 
 describe Wireguard::Admin::Repository do
-  subject(:repo) { described_class.new( Tempfile.new('wg-admin unit test').path ) }
+  subject(:repo) { described_class.new(Tempfile.new('wg-admin unit test').path) }
 
-  context 'no network was added' do
+  context 'when no network was added' do
     it 'has an empty list of networks' do
       expect(repo.networks).to be_empty
     end
@@ -21,8 +23,9 @@ describe Wireguard::Admin::Repository do
     end
   end
 
-  context 'network 10.1.2.0/24 was added' do
+  context 'when network 10.1.2.0/24 was added' do
     let(:network) { IPAddr.new('10.1.2.0/24') }
+
     before { repo.add_network(network) }
 
     it 'lists the existing network' do
@@ -39,7 +42,7 @@ describe Wireguard::Admin::Repository do
 
     it 'refuses to add another peer with the same name to a network'
 
-    context 'a client exists within the known network' do
+    context 'when a client exists within the known network' do
       let(:peer) { Wireguard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
 
       before do
@@ -47,7 +50,7 @@ describe Wireguard::Admin::Repository do
       end
 
       it 'knows it as peer' do
-        expect(repo.find_peer(IPAddr.new('10.1.2.11/24'), 'somebody')).to be
+        expect(repo.find_peer(IPAddr.new('10.1.2.11/24'), 'somebody')).not_to be_nil
       end
 
       it 'lists it as client' do
@@ -55,7 +58,7 @@ describe Wireguard::Admin::Repository do
       end
     end
 
-    context 'a server exists within the known network' do
+    context 'when a server exists within the known network' do
       it 'knows it as peer'
       it 'lists it as server'
     end

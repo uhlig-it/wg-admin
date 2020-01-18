@@ -2,6 +2,7 @@
 
 require 'tempfile'
 
+# rubocop:disable RSpec/DescribeClass
 describe 'add-server', type: 'aruba' do
   let(:network) { '192.168.10.0/24' }
 
@@ -11,7 +12,7 @@ describe 'add-server', type: 'aruba' do
     run_command_and_stop "wg-admin add-network #{network}"
   end
 
-  context 'a server with all defaults' do
+  context 'when a server is added with all defaults' do
     before do
       run_command_and_stop 'wg-admin add-server wg.example.com'
     end
@@ -62,3 +63,4 @@ describe 'add-server', type: 'aruba' do
     end
   end
 end
+# rubocop:enable RSpec/DescribeClass

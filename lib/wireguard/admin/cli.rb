@@ -11,6 +11,10 @@ require 'wireguard/admin/templates/server'
 
 module Wireguard
   module Admin
+    #
+    # Provides all the commands
+    #
+    # rubocop:disable Metrics/ClassLength
     class CLI < Thor
       class << self
         def exit_on_failure?
@@ -48,6 +52,7 @@ Available'
         end
       end
 
+      # rubocop:disable Metrics/AbcSize
       desc 'add-network NETWORK', 'Adds a new network'
       long_desc 'Adds a new network to the configuration database.'
       def add_network(network)
@@ -55,7 +60,7 @@ Available'
         repository.add_network(IPAddr.new(network))
         warn "Network #{repository.network} was successfully added." if options[:verbose]
       rescue Repository::NetworkAlreadyExists
-        warn "Error: #{$!.message}"
+        warn "Error: #{$ERROR_INFO.message}"
       end
 
       desc 'list-peers', 'Lists all peers'
@@ -69,10 +74,11 @@ Available'
         repository.peers(network).each do |peer|
           puts "  #{peer}"
         end
-      rescue
-        warn "Error: #{$!.message}"
+      rescue StandardError
+        warn "Error: #{$ERROR_INFO.message}"
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       desc 'add-server NAME', 'Adds a new server with the given public DNS NAME'
       long_desc 'Adds a new server to the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
@@ -91,9 +97,10 @@ Available'
           warn ''
           warn server
         end
-      rescue
-        warn "Error: #{$!.message}"
+      rescue StandardError
+        warn "Error: #{$ERROR_INFO.message}"
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       desc 'add-client NAME', 'Adds a new client with the given NAME'
       long_desc 'Adds a new client to the configuration database.'
@@ -108,10 +115,11 @@ Available'
           warn ''
           warn client
         end
-      rescue
-        warn "Error: #{$!.message}"
+      rescue StandardError
+        warn "Error: #{$ERROR_INFO.message}"
       end
 
+      # rubocop:disable Metrics/MethodLength
       desc 'config', 'Show the configuration of a peer'
       long_desc 'Prints the configuration for a peer to STDOUT.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
@@ -127,9 +135,11 @@ Available'
         else
           raise "No template defined for #{peer}"
         end
-      rescue
-        warn "Error: #{$!.message}"
+      rescue StandardError
+        warn "Error: #{$ERROR_INFO.message}"
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       private
 
@@ -149,5 +159,6 @@ Available'
         IPAddr.new(options[:network])
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

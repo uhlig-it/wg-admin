@@ -2,6 +2,7 @@
 
 require 'tempfile'
 
+# rubocop:disable RSpec/DescribeClass
 describe 'add-client', type: 'aruba' do
   let(:network) { '192.168.10.0/24' }
 
@@ -28,3 +29,4 @@ describe 'add-client', type: 'aruba' do
   it 'does not accept the same name twice'
   it 'does not accept the same ip twice'
 end
+# rubocop:enable RSpec/DescribeClass

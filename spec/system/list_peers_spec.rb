@@ -2,6 +2,7 @@
 
 require 'tempfile'
 
+# rubocop:disable RSpec/DescribeClass
 describe 'list-peers', type: 'aruba' do
   let(:network) { '192.168.10.0/24' }
 
@@ -11,7 +12,7 @@ describe 'list-peers', type: 'aruba' do
     run_command_and_stop "wg-admin add-network #{network}"
   end
 
-  context 'no peers' do
+  context 'without peers' do
     it 'succeeds' do
       expect(last_command_started).to be_successfully_executed
     end
@@ -25,7 +26,7 @@ describe 'list-peers', type: 'aruba' do
     end
   end
 
-  context 'a client exists' do
+  context 'when a client exists' do
     before do
       run_command_and_stop 'wg-admin add-client Alice'
       run_command_and_stop 'wg-admin list-peers'
@@ -48,3 +49,4 @@ describe 'list-peers', type: 'aruba' do
     end
   end
 end
+# rubocop:enable RSpec/DescribeClass

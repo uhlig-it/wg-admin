@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open3'
 
 module Wireguard
@@ -14,23 +16,28 @@ module Wireguard
       end
     end
 
+    #
+    # A host that connects to the VPN and registers a VPN subnet address such as 192.0.2.3 for itself.
+    #
+    # @see https://github.com/pirate/wireguard-docs#peernodedevice
+    #
     class Client
       attr_reader :name, :ip, :private_key, :public_key
 
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def initialize(name:, ip:, private_key: nil, public_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
         raise ArgumentError, 'name must not be empty' if name.empty?
-        @name = name
-
         raise ArgumentError, 'ip must be present' if ip.nil?
+        raise ArgumentError, 'private_key must not be empty' if private_key&.empty?
+        raise ArgumentError, 'public_key must not be empty' if public_key&.empty?
+
+        @name = name
         @ip = ip
-
-        raise ArgumentError, 'private_key must not be empty' if private_key && private_key.empty?
         @private_key = private_key || generate_private_key
-
-        raise ArgumentError, 'public_key must not be empty' if public_key && public_key.empty?
         @public_key = public_key || generate_public_key
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       def to_s
         "#{self.class.name.split('::').last} #{name}: #{ip}"
@@ -54,28 +61,26 @@ module Wireguard
         Open3.popen3('wg pubkey') do |stdin, stdout, stderr, waiter|
           stdin.write(private_key)
           stdin.close
-          raise InvocationError.new(stderr.lines) unless waiter.value.success?
+          raise InvocationError, stderr.lines unless waiter.value.success?
+
           stdout.read.chomp
         end
       rescue SystemCallError
-        if $!.message =~ /No such file or directory/
-          raise ProgramNotFoundError
-        else
-          raise
-        end
+        raise ProgramNotFoundError if $ERROR_INFO.message =~ /No such file or directory/
+
+        raise
       end
 
       def generate_private_key
         Open3.popen3('wg genkey') do |_, stdout, stderr, waiter|
-          raise InvocationError.new(stderr.lines) unless waiter.value.success?
+          raise InvocationError, stderr.lines unless waiter.value.success?
+
           stdout.read.chomp
         end
       rescue SystemCallError
-        if $!.message =~ /No such file or directory/
-          raise ProgramNotFoundError
-        else
-          raise
-        end
+        raise ProgramNotFoundError if $ERROR_INFO.message =~ /No such file or directory/
+
+        raise
       end
     end
   end

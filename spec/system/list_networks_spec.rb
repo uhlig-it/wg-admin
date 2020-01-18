@@ -2,13 +2,14 @@
 
 require 'tempfile'
 
+# rubocop:disable RSpec/DescribeClass
 describe 'list-networks', type: 'aruba' do
   before do
     set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
     run_command_and_stop 'wg-admin list-networks'
   end
 
-  context 'no network exists' do
+  context 'when no network exists' do
     it 'succeeds' do
       expect(last_command_started).to be_successfully_executed
     end
@@ -22,7 +23,7 @@ describe 'list-networks', type: 'aruba' do
     end
   end
 
-  context 'a network exists' do
+  context 'when a network exists' do
     let(:network) { '192.168.10.0/24' }
 
     before do
@@ -43,3 +44,4 @@ describe 'list-networks', type: 'aruba' do
     end
   end
 end
+# rubocop:enable RSpec/DescribeClass
