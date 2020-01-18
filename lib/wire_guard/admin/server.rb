@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'wireguard/admin/client'
+require 'wire_guard/admin/client'
 
-module Wireguard
+module WireGuard
   module Admin
     #
     # A publicly reachable peer/node that serves as a fallback to relay traffic

@@ -2,16 +2,16 @@
 
 require 'ipaddr'
 
-require 'wireguard/admin/templates/client'
-require 'wireguard/admin/client'
+require 'wire_guard/admin/templates/client'
+require 'wire_guard/admin/client'
 
-describe Wireguard::Admin::Templates::Client do
+describe WireGuard::Admin::Templates::Client do
   subject(:template) { described_class.new(client, servers) }
 
   context 'with no servers' do
     let(:client) do
       instance_double(
-        Wireguard::Admin::Client,
+        WireGuard::Admin::Client,
         name: 'unit test',
         private_key: 'foobar',
         ip: IPAddr.new('1.2.3.4')

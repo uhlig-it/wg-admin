@@ -3,13 +3,13 @@
 require 'thor'
 require 'ipaddr'
 
-require 'wireguard/admin/repository'
-require 'wireguard/admin/client'
-require 'wireguard/admin/server'
-require 'wireguard/admin/templates/client'
-require 'wireguard/admin/templates/server'
+require 'wire_guard/admin/repository'
+require 'wire_guard/admin/client'
+require 'wire_guard/admin/server'
+require 'wire_guard/admin/templates/client'
+require 'wire_guard/admin/templates/server'
 
-module Wireguard
+module WireGuard
   module Admin
     #
     # Provides all the commands
@@ -35,7 +35,7 @@ module Wireguard
       end
 
       class_option :verbose, type: :boolean, aliases: '-v'
-      package_name 'wg-admin is an opinionated tool to administer Wireguard configuration.
+      package_name 'wg-admin is an opinionated tool to administer WireGuard configuration.
 
 Available'
 

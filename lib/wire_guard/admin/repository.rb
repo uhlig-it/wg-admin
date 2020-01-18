@@ -2,7 +2,7 @@
 
 require 'pstore'
 
-module Wireguard
+module WireGuard
   module Admin
     #
     # The place where networks, clients and servers can be found and are persisted

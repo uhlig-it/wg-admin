@@ -2,6 +2,6 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'wireguard/admin/cli'
+require 'wire_guard/admin/cli'
 
-Wireguard::Admin::CLI.start
+WireGuard::Admin::CLI.start

@@ -5,7 +5,7 @@ require 'tempfile'
 # rubocop:disable RSpec/DescribeClass
 describe 'list-networks', type: 'aruba' do
   before do
-    set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
+    set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
     run_command_and_stop 'wg-admin list-networks'
   end
 

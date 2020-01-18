@@ -2,7 +2,7 @@
 
 require 'open3'
 
-module Wireguard
+module WireGuard
   module Admin
     InvocationError = Class.new(StandardError) do
       def initialize(lines)

@@ -5,7 +5,7 @@ author: Steffen Uhlig
 
 [![Build Status](https://travis-ci.org/suhlig/wireguard-admin.svg?branch=master)](https://travis-ci.org/suhlig/wireguard-admin)
 
-`wg-admin` is a command-line tool to administer [Wireguard](https://www.wireguard.com/) configuration files. It maintains a local database of networks, which each has a number of peers. From this database, the configuration can be rendered for all peers.
+`wg-admin` is a command-line tool to administer [WireGuard](https://www.wireguard.com/) configuration files. It maintains a local database of networks, which each has a number of peers. From this database, the configuration can be rendered for all peers.
 
 Deploying the configuration is outside the scope of this project.
 
@@ -30,7 +30,7 @@ $ wgadmin add-server --name wg.example.com
 $ wgadmin add-server --name wg.example.com --ip 192.168.20.128
 ```
 
-This command will add a new server with the given DNS name and a default configuration. If no IP address was passed, the next available address in the network will be used. When no port was specified, the de-facto standard port for Wireguard will be used (`51820`).
+This command will add a new server with the given DNS name and a default configuration. If no IP address was passed, the next available address in the network will be used. When no port was specified, the de-facto standard port for WireGuard will be used (`51820`).
 
 # Add a Client
 

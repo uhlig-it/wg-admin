@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'wireguard/admin/server'
+require 'wire_guard/admin/server'
 require 'ipaddr'
 
-describe Wireguard::Admin::Server do
+describe WireGuard::Admin::Server do
   subject(:client) { described_class.new(**args) }
 
   let(:args) do

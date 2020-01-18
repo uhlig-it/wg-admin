@@ -7,7 +7,7 @@ describe 'config', type: 'aruba' do
   let(:network) { '192.168.42.0/24' }
 
   before do
-    set_environment_variable 'WG_ADMIN_STORE', Tempfile.new('wg-admin system test').path
+    set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
     set_environment_variable 'WG_ADMIN_NETWORK', network
     run_command_and_stop "wg-admin add-network #{network}"
   end

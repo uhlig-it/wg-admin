@@ -3,11 +3,11 @@
 require 'tempfile'
 require 'ipaddr'
 
-require 'wireguard/admin/repository'
-require 'wireguard/admin/client'
+require 'wire_guard/admin/repository'
+require 'wire_guard/admin/client'
 
-describe Wireguard::Admin::Repository do
-  subject(:repo) { described_class.new(Tempfile.new('wg-admin unit test').path) }
+describe WireGuard::Admin::Repository do
+  subject(:repo) { described_class.new(Tempfile.new.path) }
 
   context 'when no network was added' do
     it 'has an empty list of networks' do
@@ -15,11 +15,11 @@ describe Wireguard::Admin::Repository do
     end
 
     it 'does not accept a new peer' do
-      expect { repo.add_peer(IPAddr.new('10.1.2.0'), 'somebody') }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
+      expect { repo.add_peer(IPAddr.new('10.1.2.0'), 'somebody') }.to raise_error(WireGuard::Admin::Repository::UnknownNetwork)
     end
 
     it 'does not provide the next address' do
-      expect { repo.next_address(IPAddr.new('10.1.2.0')) }.to raise_error(Wireguard::Admin::Repository::UnknownNetwork)
+      expect { repo.next_address(IPAddr.new('10.1.2.0')) }.to raise_error(WireGuard::Admin::Repository::UnknownNetwork)
     end
   end
 
@@ -43,7 +43,7 @@ describe Wireguard::Admin::Repository do
     it 'refuses to add another peer with the same name to a network'
 
     context 'when a client exists within the known network' do
-      let(:peer) { Wireguard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
+      let(:peer) { WireGuard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
 
       before do
         repo.add_peer(network, peer)

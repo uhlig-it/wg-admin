@@ -11,7 +11,7 @@ describe 'help', type: 'aruba' do
   end
 
   it 'prints usage' do
-    expect(last_command_started).to have_output(/Wireguard/)
+    expect(last_command_started).to have_output(/WireGuard/)
   end
 end
 # rubocop:enable RSpec/DescribeClass
