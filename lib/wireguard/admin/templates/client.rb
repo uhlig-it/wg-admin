@@ -17,7 +17,7 @@ module Wireguard
             [Peer]
             PublicKey = <%= server.public_key %>
             EndPoint = <%= server.name %>:<%= server.port %>
-            AllowedIPs = <%= server.allowed_ips %>
+            AllowedIPs = <%= server.allowed_ips %>/<%= server.allowed_ips.prefix %>
             PersistentKeepalive = 25
             <% end %>
           EOT
