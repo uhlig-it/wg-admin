@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'tempfile'
+require 'inifile'
 
 # rubocop:disable RSpec/DescribeClass
 describe 'config', type: 'aruba' do
@@ -29,15 +30,32 @@ describe 'config', type: 'aruba' do
 
     it 'prints the Address' do
       run_command_and_stop 'wg-admin config wg.example.com'
-      expect(last_command_started.stdout).to include('Address = 192.168.42.1/24')
+      config = IniFile.new(content: last_command_started.stdout)
+      expect(config['Interface']).to include('Address' => '192.168.42.1/24')
     end
 
     it "prints the server's ListenPort" do
       run_command_and_stop 'wg-admin config wg.example.com'
-      expect(last_command_started.stdout).to include('ListenPort = 51820')
+      config = IniFile.new(content: last_command_started.stdout)
+      expect(config['Interface']).to include('ListenPort' => 51_820)
     end
 
-    it 'prints the PrivateKey'
+    describe 'PrivateKey' do
+      let(:config) { IniFile.new(content: last_command_started.stdout) }
+
+      before do
+        run_command_and_stop 'wg-admin config wg.example.com'
+      end
+
+      it 'exists' do
+        expect(config['Interface']).to include('PrivateKey')
+      end
+
+      it 'is not empty' do
+        expect(config['Interface']['PrivateKey']).not_to be_empty
+      end
+    end
+
     it 'refuses to print the config of a non-existing server'
   end
 
@@ -61,30 +79,27 @@ describe 'config', type: 'aruba' do
       run_command_and_stop 'wg-admin add-client foo'
       run_command_and_stop 'wg-admin add-client bar'
       run_command_and_stop 'wg-admin add-client baz'
+      run_command_and_stop 'wg-admin config foo'
+    end
+
+    let(:config) do
+      IniFile.new(content: last_command_started.stdout)
     end
 
     describe 'config for client foo' do
-      before do
-      end
-
       it 'prints the PrivateKey'
 
       it 'prints the Address' do
-        run_command_and_stop 'wg-admin config foo'
-        expect(last_command_started.stdout).to include('Address = 192.168.42.2/24')
+        expect(config['Interface']).to include('Address' => '192.168.42.2/24')
       end
 
       it 'allows all clients to access the whole network' do
-        run_command_and_stop 'wg-admin config foo'
-        # TODO: just within a [Peer] section
-        expect(last_command_started.stdout).to include('AllowedIPs = 192.168.42.0/24')
+        expect(config['Peer']).to include('AllowedIPs' => '192.168.42.0/24')
       end
     end
 
     it 'keeps the connection to the server alive' do
-      run_command_and_stop 'wg-admin config foo'
-      # TODO: just within a [Peer] section
-      expect(last_command_started.stdout).to include('PersistentKeepalive = 25')
+      expect(config['Peer']).to include('PersistentKeepalive' => 25)
     end
   end
 end
