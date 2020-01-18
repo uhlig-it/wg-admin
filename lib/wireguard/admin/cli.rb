@@ -38,7 +38,11 @@ Available'
       desc 'list-networks', 'Lists all known networks'
       long_desc 'List the networks in the configuration database.'
       def list_networks
-        warn "Using database from #{repository.path}" if options[:verbose]
+        if options[:verbose]
+          warn "Using database #{repository.path}"
+          warn 'No networks defined.' if repository.networks.empty?
+        end
+
         repository.networks.each do |network|
           puts "  #{network}/#{network.prefix}"
         end
@@ -47,7 +51,7 @@ Available'
       desc 'add-network NETWORK', 'Adds a new network'
       long_desc 'Adds a new network to the configuration database.'
       def add_network(network)
-        warn "Using database from #{repository.path}" if options[:verbose]
+        warn "Using database #{repository.path}" if options[:verbose]
         repository.add_network(IPAddr.new(network))
         warn "Network #{repository.network} was successfully added." if options[:verbose]
       rescue Repository::NetworkAlreadyExists
@@ -58,8 +62,11 @@ Available'
       long_desc 'For a given network, lists all peers in the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       def list_peers
-        warn "Using database from #{repository.path}" if options[:verbose]
-        repository.peers(IPAddr.new(options[:network])).each do |peer|
+        if options[:verbose]
+          warn "Using database #{repository.path}"
+          warn "No peers in network #{network}." if repository.networks.empty?
+        end
+        repository.peers(network).each do |peer|
           puts "  #{peer}"
         end
       rescue
@@ -70,13 +77,14 @@ Available'
       long_desc 'Adds a new server to the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       method_option :ip, desc: 'the (private) IP address of the new server (within the VPN)', aliases: '-i', required: false
+      method_option :port, desc: 'port to listen on', aliases: '-p', required: false
       method_option :allowed_ips, desc: 'The range of allowed IP addresses that this server is routing', aliases: '-a', required: false
       method_option :device, desc: 'The network device used for forwarding traffic', aliases: '-d', required: false
       def add_server(name)
-        warn "Using database from #{repository.path}" if options[:verbose]
-        network = IPAddr.new(options[:network])
+        warn "Using database #{repository.path}" if options[:verbose]
         server = Server.new(name: name, ip: ip, allowed_ips: options[:allowed_ips] || repository.find_network(network))
         server.device = options[:device] if options[:device]
+        server.port = options[:port] if options[:port]
         repository.add_peer(network, server)
         if options[:verbose]
           warn 'New server was successfully added:'
@@ -92,8 +100,7 @@ Available'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       method_option :ip, desc: 'the IP address of the new client', aliases: '-i', required: false
       def add_client(name)
-        warn "Using database from #{repository.path}" if options[:verbose]
-        network = IPAddr.new(options[:network])
+        warn "Using database #{repository.path}" if options[:verbose]
         client = Client.new(name: name, ip: ip)
         repository.add_peer(network, client)
         if options[:verbose]
@@ -109,8 +116,7 @@ Available'
       long_desc 'Prints the configuration for a peer to STDOUT.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       def config(name)
-        warn "Using database from #{repository.path}" if options[:verbose]
-        network = IPAddr.new(options[:network])
+        warn "Using database #{repository.path}" if options[:verbose]
         peer = repository.find_peer(network, name)
 
         case peer
@@ -135,8 +141,12 @@ Available'
         if options[:ip]
           IPAddr.new(options[:ip])
         else
-          repository.next_address(IPAddr.new(options[:network]))
+          repository.next_address(network)
         end
+      end
+
+      def network
+        IPAddr.new(options[:network])
       end
     end
   end
