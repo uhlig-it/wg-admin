@@ -16,5 +16,8 @@ guard :rspec, cmd: 'bundle exec rspec' do
   watch(%r{^lib/(?<module>.*/)*(?<file>.+)\.rb$}) do |m|
     "spec/unit/#{m[:module]}#{m[:file]}_spec.rb"
   end
+  watch(%r{^lib/(?<module>.*/)*(?<file>.+)\.rb$}) do |m|
+    "spec/system/#{m[:module]}#{m[:file]}_spec.rb"
+  end
   watch('lib/wireguard/admin/cli.rb') { 'spec/system' }
 end

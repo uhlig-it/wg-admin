@@ -3,14 +3,14 @@
 require 'tempfile'
 
 # rubocop:disable RSpec/DescribeClass
-describe 'add-client', type: 'aruba' do
+describe 'clients', type: 'aruba' do
   let(:network) { '192.168.10.0/24' }
 
   before do
     set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
     set_environment_variable 'WG_ADMIN_NETWORK', network
-    run_command_and_stop "wg-admin add-network #{network}"
-    run_command_and_stop 'wg-admin add-client Alice'
+    run_command_and_stop "wg-admin networks add #{network}"
+    run_command_and_stop 'wg-admin clients add Alice'
   end
 
   it 'succeeds' do
@@ -22,7 +22,7 @@ describe 'add-client', type: 'aruba' do
   end
 
   it 'auto-assigns the first IP address of the network' do
-    run_command_and_stop 'wg-admin list-peers'
+    run_command_and_stop 'wg-admin clients list'
     expect(last_command_started.stdout).to include('192.168.10.1')
   end
 

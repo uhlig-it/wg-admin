@@ -3,18 +3,18 @@
 require 'tempfile'
 
 # rubocop:disable RSpec/DescribeClass
-describe 'add-server', type: 'aruba' do
+describe 'servers add', type: 'aruba' do
   let(:network) { '192.168.10.0/24' }
 
   before do
     set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
     set_environment_variable 'WG_ADMIN_NETWORK', network
-    run_command_and_stop "wg-admin add-network #{network}"
+    run_command_and_stop "wg-admin networks add #{network}"
   end
 
   context 'when a server is added with all defaults' do
     before do
-      run_command_and_stop 'wg-admin add-server wg.example.com'
+      run_command_and_stop 'wg-admin servers add wg.example.com'
     end
 
     it 'succeeds' do
@@ -26,12 +26,12 @@ describe 'add-server', type: 'aruba' do
     end
 
     it 'auto-assigns the first IP address of the network' do
-      run_command_and_stop 'wg-admin list-peers'
+      run_command_and_stop 'wg-admin servers list'
       expect(last_command_started.stdout).to include('192.168.10.1')
     end
 
     it 'uses the default port' do
-      run_command_and_stop 'wg-admin list-peers'
+      run_command_and_stop 'wg-admin servers list'
       expect(last_command_started.stdout).to include(':51820')
     end
 
@@ -41,7 +41,7 @@ describe 'add-server', type: 'aruba' do
 
   context 'when specifying a non-default port' do
     before do
-      run_command_and_stop 'wg-admin add-server wg.example.com --port 53'
+      run_command_and_stop 'wg-admin servers add wg.example.com --port 53'
     end
 
     it 'succeeds' do
@@ -53,12 +53,12 @@ describe 'add-server', type: 'aruba' do
     end
 
     it 'auto-assigns the first IP address of the network' do
-      run_command_and_stop 'wg-admin list-peers'
+      run_command_and_stop 'wg-admin servers list'
       expect(last_command_started.stdout).to include('192.168.10.1')
     end
 
     it 'uses the specified port' do
-      run_command_and_stop 'wg-admin list-peers'
+      run_command_and_stop 'wg-admin servers list'
       expect(last_command_started.stdout).to include(':53')
     end
   end

@@ -10,12 +10,12 @@ describe 'config', type: 'aruba' do
   before do
     set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
     set_environment_variable 'WG_ADMIN_NETWORK', network
-    run_command_and_stop "wg-admin add-network #{network}"
+    run_command_and_stop "wg-admin networks add #{network}"
   end
 
   context 'when just a single server exists' do
     before do
-      run_command_and_stop 'wg-admin add-server wg.example.com'
+      run_command_and_stop 'wg-admin servers add wg.example.com'
     end
 
     it 'succeeds' do
@@ -61,7 +61,7 @@ describe 'config', type: 'aruba' do
 
   context 'when just a single client exists' do
     before do
-      run_command_and_stop 'wg-admin add-client foo'
+      run_command_and_stop 'wg-admin clients add foo'
     end
 
     it 'prints the Address' do
@@ -75,10 +75,10 @@ describe 'config', type: 'aruba' do
 
   context 'when a server and multiple clients exist' do
     before do
-      run_command_and_stop 'wg-admin add-server wg.example.com'
-      run_command_and_stop 'wg-admin add-client foo'
-      run_command_and_stop 'wg-admin add-client bar'
-      run_command_and_stop 'wg-admin add-client baz'
+      run_command_and_stop 'wg-admin servers add wg.example.com'
+      run_command_and_stop 'wg-admin clients add foo'
+      run_command_and_stop 'wg-admin clients add bar'
+      run_command_and_stop 'wg-admin clients add baz'
       run_command_and_stop 'wg-admin config foo'
     end
 

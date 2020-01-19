@@ -1,5 +1,5 @@
 ---
-title: wireguard-admin
+title: wg-admin
 author: Steffen Uhlig
 ---
 
@@ -16,7 +16,7 @@ The defining attribute of the configuration is a network. This is a range of IP 
 Examples:
 
 ```command
-$ wgadmin add-network 192.168.10.0/24
+$ wg-admin networks add 192.168.10.0/24
 ```
 
 # Add a Server
@@ -26,8 +26,8 @@ A `server` is a peer with a public DNS name that is reachable by all clients via
 Examples:
 
 ```command
-$ wgadmin add-server --name wg.example.com
-$ wgadmin add-server --name wg.example.com --ip 192.168.20.128
+$ wg-admin servers add --name wg.example.com
+$ wg-admin servers add --name wg.example.com --ip 192.168.20.128
 ```
 
 This command will add a new server with the given DNS name and a default configuration. If no IP address was passed, the next available address in the network will be used. When no port was specified, the de-facto standard port for WireGuard will be used (`51820`).
@@ -39,8 +39,8 @@ A `client` is regular peer that does not relay (bounce) traffic. It will connect
 Examples:
 
 ```command
-$ wgadmin add-client --name Alice
-$ wgadmin add-client --name Alice --ip 192.168.20.11
+$ wg-admin client add --name Alice
+$ wg-admin client add --name Alice --ip 192.168.20.11
 ```
 
 If no IP address was passed, the next available address in the network will be used.
@@ -48,7 +48,7 @@ If no IP address was passed, the next available address in the network will be u
 # List Peers
 
 ```command
-$ wgadmin list-peers
+$ wg-admin peers list
 +================+========|=================|
 | Name           | Type   | IP Addresses    |
 +================+========|=================|
@@ -61,8 +61,8 @@ $ wgadmin list-peers
 `TODO` If this command is run without a (pseudo) terminal, it will print the name of each peer on a single line, which allows for a convenient loop over all peers, e.g. for writing configuration files (see below for further details):
 
 ```command
-$ for name in $(wgadmin list-peers); do
-  wgadmin config "$name" > "$name".conf
+$ for name in $(wg-admin peers list); do
+  wg-admin config "$name" > "$name".conf
 done
 ```
 
@@ -71,7 +71,7 @@ done
 This command will show the configuration of the server itself as well as the necessary fragments for a particular peer:
 
 ```command
-$ wgadmin config wg.example.com
+$ wg-admin config wg.example.com
 [Interface]
 Address = 192.168.20.1/24
 ListenPort = 51820
@@ -86,5 +86,5 @@ AllowedIPs = 192.168.20.11/32
 The result is printed to `stdout` and could be redirected to a file, or piped into a QR encoder:
 
 ```command
-$ wgadmin config --client=Alice | qrencode -t ANSIUTF8
+$ wg-admin config --client=Alice | qrencode -t ANSIUTF8
 ```
