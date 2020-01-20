@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wireguard-admin (0.0.1)
+    wg-admin (0.0.1)
       thor (~> 1.0.1)
 
 GEM
@@ -129,7 +129,7 @@ DEPENDENCIES
   rspec (~> 3.9.0)
   rubocop (~> 0.79.0)
   rubocop-rspec (~> 1.37.1)
-  wireguard-admin!
+  wg-admin!
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
