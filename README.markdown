@@ -1,9 +1,6 @@
----
-title: wg-admin
-author: Steffen Uhlig
----
+# `wg-admin`
 
-[![Build Status](https://travis-ci.org/suhlig/wireguard-admin.svg?branch=master)](https://travis-ci.org/suhlig/wireguard-admin)
+[![Build Status](https://travis-ci.org/uhlig-it/wireguard-admin.svg?branch=master)](https://travis-ci.org/uhlig-it/wireguard-admin)
 
 `wg-admin` is a command-line tool to administer [WireGuard](https://www.wireguard.com/) configuration files. It maintains a local database of networks, which each has a number of peers. From this database, the configuration can be rendered for all peers.
 
