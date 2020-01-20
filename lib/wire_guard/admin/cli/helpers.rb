@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: Check ~/workspace/rtc-cli/test/test_helper.rb on how to improve this
+
 module WireGuard
   module Admin
     #
@@ -17,6 +19,8 @@ module WireGuard
       def repository
         @repository ||= Repository.new(path)
       end
+
+      Thor.class_option :verbose, type: :boolean, aliases: '-v'
     end
 
     #

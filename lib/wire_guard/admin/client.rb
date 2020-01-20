@@ -65,8 +65,8 @@ module WireGuard
 
           stdout.read.chomp
         end
-      rescue SystemCallError
-        raise ProgramNotFoundError if $ERROR_INFO.message =~ /No such file or directory/
+      rescue SystemCallError => e
+        raise ProgramNotFoundError if e.message =~ /No such file or directory/
 
         raise
       end
@@ -77,8 +77,8 @@ module WireGuard
 
           stdout.read.chomp
         end
-      rescue SystemCallError
-        raise ProgramNotFoundError if $ERROR_INFO.message =~ /No such file or directory/
+      rescue SystemCallError => e
+        raise ProgramNotFoundError if e.message =~ /No such file or directory/
 
         raise
       end

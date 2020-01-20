@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'thor'
+
 module WireGuard
   module Admin
     #
@@ -25,8 +27,8 @@ module WireGuard
             puts peer.name
           end
         end
-      rescue StandardError
-        warn "Error: #{$ERROR_INFO.message}"
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
       end
       # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end

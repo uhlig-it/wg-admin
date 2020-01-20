@@ -71,6 +71,18 @@ describe WireGuard::Admin::Client do
 
       it_behaves_like('requiring valid args', /empty/)
     end
+
+    context 'when the wg executable is not found' do
+      around do |example|
+        drop_from_path('wg') do
+          example.run
+        end
+      end
+
+      it 'raises an error' do
+        expect { described_class.new(**args) }.to raise_error(WireGuard::Admin::ProgramNotFoundError)
+      end
+    end
   end
 
   it 'has a name' do

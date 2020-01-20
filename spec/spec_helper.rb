@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 require 'aruba/rspec'
+require 'mkmf'
+
+module Helpers
+  #
+  # Drop the directory where the given executable is found from the PATH.
+  #
+  # @returns the old path.
+  #
+  def drop_from_path(executable)
+    orig_path = ENV['PATH']
+    dir_to_be_dropped = File.dirname(MakeMakefile.find_executable(executable))
+    ENV['PATH'] = ENV['PATH'].split(':').reject { |e| e == dir_to_be_dropped }.join(':')
+
+    yield
+
+    ENV['PATH'] = orig_path
+  end
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -15,6 +33,7 @@ RSpec.configure do |config|
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
+  config.include Helpers
 
   shared_examples 'requiring valid args' do |error_matcher|
     it 'does not allow instantiation' do

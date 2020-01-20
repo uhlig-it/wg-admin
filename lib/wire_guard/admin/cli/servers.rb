@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'thor'
+
 module WireGuard
   module Admin
     #
@@ -28,8 +30,8 @@ module WireGuard
           warn ''
           warn server
         end
-      rescue StandardError
-        warn "Error: #{$ERROR_INFO.message}"
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
       end
 
       desc 'list', 'Lists all servers'
@@ -43,8 +45,8 @@ module WireGuard
         repository.servers(network).each do |server|
           puts server
         end
-      rescue StandardError
-        warn "Error: #{$ERROR_INFO.message}"
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
       end
       # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/AbcSize
     end

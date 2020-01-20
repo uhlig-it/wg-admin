@@ -28,7 +28,6 @@ module WireGuard
         true
       end
 
-      class_option :verbose, type: :boolean, aliases: '-v'
       package_name 'wg-admin is an opinionated tool to administer WireGuard configuration.
 
 Available'
@@ -61,8 +60,8 @@ Available'
         else
           raise "No template defined for #{peer}"
         end
-      rescue StandardError
-        warn "Error: #{$ERROR_INFO.message}"
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
       end
       # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
