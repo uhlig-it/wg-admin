@@ -9,7 +9,7 @@ module WireGuard
       extend ClassHelpers
       include InstanceHelpers
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       desc 'list', 'Lists all peers'
       long_desc 'For a given network, lists all peers (servers and clients) in the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
@@ -28,7 +28,7 @@ module WireGuard
       rescue StandardError
         warn "Error: #{$ERROR_INFO.message}"
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
   end
 end
