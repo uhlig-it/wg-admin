@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rubygems'
-require 'bundler/setup'
 require_relative 'lib/wire_guard/admin/version'
 
 # rubocop:disable Metrics/BlockLength
@@ -11,13 +9,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Steffen Uhlig']
   spec.email         = ['steffen@familie-uhlig.net']
   spec.homepage      = 'https://github.com/uhlig-it/wg-admin'
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
 
   spec.summary       = 'WireGuard administration tool'
   spec.description   = %(wg-admin is an administration tool for WireGuard configuration.)
   spec.license       = 'MIT'
 
-  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
+  spec.files         = Dir.chdir(File.expand_path(__dir__)) do
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
 
