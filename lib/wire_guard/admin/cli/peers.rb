@@ -19,7 +19,11 @@ module WireGuard
           warn "No clients in network #{network}." if repository.networks.empty?
         end
         repository.peers(network).each do |peer|
-          puts peer
+          if STDOUT.tty?
+            puts peer
+          else
+            puts peer.name
+          end
         end
       rescue StandardError
         warn "Error: #{$ERROR_INFO.message}"

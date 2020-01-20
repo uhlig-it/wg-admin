@@ -43,10 +43,6 @@ describe 'peers', type: 'aruba' do
     it "lists the client's name" do
       expect(last_command_started.stdout).to include('Alice')
     end
-
-    it "lists the client's ip" do
-      expect(last_command_started.stdout).to include('192.168.10.1')
-    end
   end
 end
 # rubocop:enable RSpec/DescribeClass

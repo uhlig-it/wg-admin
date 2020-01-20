@@ -46,7 +46,7 @@ Available'
       subcommand 'peers', Peers
 
       # rubocop:disable  Metrics/MethodLength, Metrics/AbcSize
-      desc 'config', 'Show the configuration of a peer'
+      desc 'config PEER', 'Show the configuration of a peer'
       long_desc 'Prints the configuration for a peer to STDOUT.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       def config(name)

@@ -61,8 +61,8 @@ $ wg-admin peers list
 `TODO` If this command is run without a (pseudo) terminal, it will print the name of each peer on a single line, which allows for a convenient loop over all peers, e.g. for writing configuration files (see below for further details):
 
 ```command
-$ for name in $(wg-admin peers list); do
-  wg-admin config "$name" > "$name".conf
+$ for peer in $(wg-admin peers list); do
+  wg-admin config "$peer" > "$peer".conf
 done
 ```
 
