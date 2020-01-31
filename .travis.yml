@@ -2,7 +2,7 @@
 dist: xenial
 language: ruby
 before_install:
-  - sudo add-apt-repository ppa:wireguard/wireguard
+  - sudo add-apt-repository --yes ppa:wireguard/wireguard
   - sudo apt-get --yes update
   - sudo apt-get --yes install wireguard
 rvm:
