@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-require 'tempfile'
+require 'pathname'
 
 # rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'peers', type: 'aruba' do
     let(:network) { '192.168.10.0/24' }
+    let(:store_path) { Pathname('/tmp/wg-admin-test') }
 
     before do
-      set_environment_variable 'WG_ADMIN_STORE', Tempfile.new.path
+      store_path.unlink if store_path.exist?
+      set_environment_variable 'WG_ADMIN_STORE', store_path.to_path
       set_environment_variable 'WG_ADMIN_NETWORK', network
       run_command_and_stop "wg-admin networks add #{network}"
     end
