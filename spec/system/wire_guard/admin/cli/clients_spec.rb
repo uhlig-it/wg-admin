@@ -36,9 +36,8 @@ describe 'wg-admin' do
         end
       end
 
-      fit 'does not succeed' do
+      it 'does not succeed' do
         run_command_and_stop 'wg-admin clients add Alice'
-warn "FOOOOOOO  - #{last_command_started.stdout}"
         run_command_and_stop 'which wg'
         expect(last_command_started).not_to be_successfully_executed
       end
