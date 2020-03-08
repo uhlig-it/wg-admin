@@ -14,7 +14,6 @@ describe 'wg-admin' do
         store_path.unlink if store_path.exist?
         set_environment_variable 'WG_ADMIN_STORE', store_path.to_path
         set_environment_variable 'WG_ADMIN_NETWORK', network
-        warn `WG_ADMIN_STORE=#{store_path.to_path} wg-admin networks add 192.168.42.0/24 --verbose`
         run_command_and_stop "wg-admin networks add #{network}"
       end
 
@@ -40,7 +39,7 @@ describe 'wg-admin' do
       it 'does not accept the same name twice'
       it 'does not accept the same ip twice'
 
-      context 'when the wg executable is not found' do
+      context 'when the wg executable is not found', skip: ENV['TRAVIS'] do
         let(:dir_of_wg) { `dirname $(which wg)`.chomp }
 
         around do |example|
