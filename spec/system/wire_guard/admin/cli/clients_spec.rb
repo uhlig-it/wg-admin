@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require 'tempfile'
+require 'pathname'
 
 # rubocop:disable RSpec/DescribeClass
+# rubocop:disable RSpec/NestedGroups
 describe 'wg-admin' do
   describe 'clients', type: 'aruba' do
     context 'when the network is set via environment variable' do
       let(:network) { '192.168.10.0/24' }
-      let(:store_path) { Tempfile.new.path }
+      let(:store_path) { Pathname('/tmp/wg-admin-test') }
 
       before do
-        set_environment_variable 'WG_ADMIN_STORE', store_path
+        store_path.unlink if store_path.exist?
+        set_environment_variable 'WG_ADMIN_STORE', store_path.to_path
         set_environment_variable 'WG_ADMIN_NETWORK', network
         run_command_and_stop "wg-admin networks add #{network}"
       end
@@ -44,15 +46,22 @@ describe 'wg-admin' do
           end
         end
 
+        it 'fails' do
+          run_command_and_stop 'wg-admin clients add Alice'
+          raise 'Command should have failed, but it did not'
+        rescue RSpec::Expectations::ExpectationNotMetError
+          expect(last_command_started).not_to be_successfully_executed
+        end
+
         it 'prints a meaningful error message' do
           run_command_and_stop 'wg-admin clients add Alice'
-          fail 'Command should have failed, but it did not'
-        rescue RSpec::Expectations::ExpectationNotMetError => e
-          expect(last_command_started).not_to be_successfully_executed
+          raise 'Command should have failed, but it did not'
+        rescue RSpec::Expectations::ExpectationNotMetError
           expect(last_command_started.stderr).to match(/not found in the PATH/), last_command_started.stderr
         end
       end
     end
   end
   # rubocop:enable RSpec/DescribeClass
+  # rubocop:enable RSpec/NestedGroups
 end
