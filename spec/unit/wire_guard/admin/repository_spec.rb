@@ -42,6 +42,14 @@ describe WireGuard::Admin::Repository do
 
     it 'refuses to add another peer with the same name to a network'
 
+    context 'when the network is deleted again' do
+      before { repo.delete_network(network) }
+
+      it 'is no longer there' do
+        expect(repo.networks).not_to include(network)
+      end
+    end
+
     context 'when a client exists within the known network' do
       let(:peer) { WireGuard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11') }
 

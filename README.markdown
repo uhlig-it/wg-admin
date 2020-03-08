@@ -63,7 +63,7 @@ $ for peer in $(wg-admin peers list); do
 done
 ```
 
-# `TODO` Generate the Config Files
+# Generate the Config Files
 
 This command will show the configuration of the server itself as well as the necessary fragments for a particular peer:
 

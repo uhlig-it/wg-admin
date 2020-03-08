@@ -95,6 +95,16 @@ module WireGuard
         end
       end
 
+      def delete_network(network)
+        raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
+
+        @backend.transaction do
+          raise UnknownNetwork, network unless @backend.root?(network)
+
+          @backend.delete(network)
+        end
+      end
+
       #
       # Add a peer to the given network
       #

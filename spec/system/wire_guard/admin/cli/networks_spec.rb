@@ -25,6 +25,12 @@ describe 'wg-admin' do
       it 'shows no networks' do
         expect(last_command_started.stdout).to be_empty
       end
+
+      it 'fails to delete a non-existing network' do
+        run_command_and_stop "wg-admin networks delete 192.168.10.0/24"
+      rescue RSpec::Expectations::ExpectationNotMetError
+        expect(last_command_started).not_to be_successfully_executed
+      end
     end
 
     context 'when a new network is added' do
@@ -44,7 +50,12 @@ describe 'wg-admin' do
 
       it 'lists the network that was just added' do
         run_command_and_stop 'wg-admin networks list'
-        expect(last_command_started.stdout).to include('192.168.10.0/24')
+        expect(last_command_started.stdout).to include(network)
+      end
+
+      it 'can be deleted' do
+        run_command_and_stop "wg-admin networks delete #{network}"
+        expect(last_command_started.stdout).not_to include(network)
       end
     end
 

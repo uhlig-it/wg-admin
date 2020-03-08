@@ -39,6 +39,17 @@ module WireGuard
       rescue Repository::NetworkAlreadyExists => e
         raise Thor::Error, "Error: #{e.message}"
       end
+
+      desc 'delete NETWORK', 'Deletes a network'
+      long_desc 'Deletes an existingnetwork from the configuration database.'
+      def delete(network)
+        warn "Using database #{repository.path}" if options[:verbose]
+        nw = IPAddr.new(network)
+        repository.delete_network(nw)
+        warn "Network #{nw}/#{nw.prefix} was successfully deleted." if options[:verbose]
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
+      end
     end
   end
 end
