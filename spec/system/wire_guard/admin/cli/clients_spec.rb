@@ -14,6 +14,7 @@ describe 'wg-admin' do
         store_path.unlink if store_path.exist?
         set_environment_variable 'WG_ADMIN_STORE', store_path.to_path
         set_environment_variable 'WG_ADMIN_NETWORK', network
+        warn `WG_ADMIN_STORE=#{store_path.to_path} wg-admin networks add 192.168.42.0/24 --verbose`
         run_command_and_stop "wg-admin networks add #{network}"
       end
 
