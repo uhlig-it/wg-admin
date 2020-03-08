@@ -40,8 +40,10 @@ describe 'wg-admin' do
       it 'does not accept the same ip twice'
 
       context 'when the wg executable is not found' do
+        let(:dir_of_wg) { %x[dirname $(which wg)].chomp }
+
         around do |example|
-          with_environment 'PATH' => ENV['PATH'].split(':').reject { |e| e == '/usr/local/bin' }.join(':') do
+          with_environment 'PATH' => ENV['PATH'].split(':').reject { |e| e == dir_of_wg }.join(':') do
             example.run
           end
         end
