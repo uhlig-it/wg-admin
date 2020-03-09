@@ -40,4 +40,11 @@ RSpec.configure do |config|
       expect { described_class.new(**args) }.to raise_error(ArgumentError, error_matcher || /missing/)
     end
   end
+
+  config.around do |example|
+    Dir.mktmpdir do |workdir|
+      set_environment_variable 'WG_ADMIN_STORE', "#{workdir}/wgadmin.pstore" if example.metadata[:type] == 'aruba'
+      example.run
+    end
+  end
 end

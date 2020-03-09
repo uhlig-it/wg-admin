@@ -1,15 +1,9 @@
 # frozen_string_literal: true
 
-require 'pathname'
-
 # rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'networks', type: 'aruba' do
-    let(:store_path) { Pathname('/tmp/wg-admin-test') }
-
     before do
-      store_path.unlink if store_path.exist?
-      set_environment_variable 'WG_ADMIN_STORE', store_path.to_path
       run_command_and_stop 'wg-admin networks list'
     end
 
@@ -27,7 +21,7 @@ describe 'wg-admin' do
       end
 
       it 'fails to delete a non-existing network' do
-        run_command_and_stop "wg-admin networks delete 192.168.10.0/24"
+        run_command_and_stop 'wg-admin networks delete 192.168.10.0/24'
       rescue RSpec::Expectations::ExpectationNotMetError
         expect(last_command_started).not_to be_successfully_executed
       end
