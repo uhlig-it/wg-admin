@@ -6,16 +6,32 @@ require 'pathname'
 # rubocop:disable RSpec/NestedGroups
 describe 'wg-admin' do
   describe 'clients', type: 'aruba' do
-    context 'when the network is set via environment variable' do
-      let(:network) { '192.168.10.0/24' }
+    let(:network) { '192.168.10.0/24' }
 
+    context 'with a single network' do
       before do
-        set_environment_variable 'WG_ADMIN_NETWORK', network
         run_command_and_stop "wg-admin networks add #{network}"
       end
 
-      it 'succeeds' do
-        expect(last_command_started).to be_successfully_executed
+      context 'when adding a new client' do
+        before do
+          run_command_and_stop 'wg-admin clients add Alice'
+        rescue RSpec::Expectations::ExpectationNotMetError => e
+          warn "******** #{last_command_started.stderr}"
+          raise e
+        end
+
+        it 'auto-assigns the first IP address of the network' do
+          run_command_and_stop 'wg-admin clients list'
+          expect(last_command_started.stdout).to include('192.168.10.1')
+        end
+      end
+    end
+
+    context 'when the network is set via environment variable' do
+      before do
+        set_environment_variable 'WG_ADMIN_NETWORK', network
+        run_command_and_stop "wg-admin networks add #{network}"
       end
 
       it 'shows no errors' do
@@ -31,9 +47,12 @@ describe 'wg-admin' do
           run_command_and_stop 'wg-admin clients list'
           expect(last_command_started.stdout).to include('192.168.10.1')
         end
+
+        it 'fails when trying to add the same name again' do
+          expect { run_command_and_stop 'wg-admin clients add Alice' }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+        end
       end
 
-      it 'does not accept the same name twice'
       it 'does not accept the same ip twice'
 
       context 'when the wg executable is not found', skip: ENV['TRAVIS'] do

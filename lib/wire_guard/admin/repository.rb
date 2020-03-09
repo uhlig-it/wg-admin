@@ -35,6 +35,15 @@ module WireGuard
         end
       end
 
+      #
+      # Raised if the network already exists
+      #
+      class PeerAlreadyExists < StandardError
+        def initialize(peer, network)
+          super("A peer named #{peer.name} already exists in network #{network}.")
+        end
+      end
+
       attr_reader :path
 
       def initialize(path)
@@ -109,6 +118,8 @@ module WireGuard
       # Add a peer to the given network
       #
       def add_peer(network, peer)
+        raise PeerAlreadyExists.new(peer, network) if find_peer(network, peer.name)
+
         @backend.transaction do
           raise UnknownNetwork, network unless @backend.root?(network)
 

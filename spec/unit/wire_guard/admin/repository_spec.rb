@@ -15,7 +15,9 @@ describe WireGuard::Admin::Repository do
     end
 
     it 'does not accept a new peer' do
-      expect { repo.add_peer(IPAddr.new('10.1.2.0'), 'somebody') }.to raise_error(WireGuard::Admin::Repository::UnknownNetwork)
+      unknown_network = IPAddr.new('10.1.2.0/24')
+      peer = WireGuard::Admin::Client.new(name: 'somebody', ip: '10.1.2.11')
+      expect { repo.add_peer(unknown_network, peer) }.to raise_error(WireGuard::Admin::Repository::UnknownNetwork)
     end
 
     it 'does not provide the next address' do
@@ -63,6 +65,10 @@ describe WireGuard::Admin::Repository do
 
       it 'lists it as client' do
         expect(repo.clients(network)).to include(peer)
+      end
+
+      it 'does not allow to add another client with the same name' do
+        expect { repo.add_peer(network, peer) }.to raise_error(StandardError)
       end
     end
 
