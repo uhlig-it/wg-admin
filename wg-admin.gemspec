@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Steffen Uhlig']
   spec.email         = ['steffen@familie-uhlig.net']
   spec.homepage      = 'https://github.com/uhlig-it/wg-admin'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
 
   spec.summary       = 'WireGuard administration tool'
   spec.description   = %(wg-admin is an administration tool for WireGuard configuration.)
