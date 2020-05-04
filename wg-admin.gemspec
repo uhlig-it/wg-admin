@@ -22,19 +22,19 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'thor', '~> 1.0.1'
+  spec.add_runtime_dependency 'thor'
 
-  spec.add_development_dependency 'aruba', '~> 0.14.14'
-  spec.add_development_dependency 'bundler', '~> 2.1'
-  spec.add_development_dependency 'guard', '~> 2.16.1'
-  spec.add_development_dependency 'guard-bundler', '~> 3.0.0'
-  spec.add_development_dependency 'guard-rspec', '~> 4.7.3'
-  spec.add_development_dependency 'inifile', '~> 3.0.0'
-  spec.add_development_dependency 'pry', '~> 0.12.2'
-  spec.add_development_dependency 'pry-byebug', '~> 3.7.0'
-  spec.add_development_dependency 'rake', '~> 13.0.1'
-  spec.add_development_dependency 'rspec', '~> 3.9.0'
-  spec.add_development_dependency 'rubocop', '~> 0.79.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.37.1'
+  spec.add_development_dependency 'aruba'
+  spec.add_development_dependency 'bundler', '~>2.1'
+  spec.add_development_dependency 'guard'
+  spec.add_development_dependency 'guard-bundler'
+  spec.add_development_dependency 'guard-rspec'
+  spec.add_development_dependency 'inifile'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-rspec'
 end
 # rubocop:enable Metrics/BlockLength
