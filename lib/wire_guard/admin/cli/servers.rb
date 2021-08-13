@@ -19,11 +19,13 @@ module WireGuard
       method_option :port, desc: 'port to listen on', aliases: '-p', required: false
       method_option :allowed_ips, desc: 'The range of allowed IP addresses that this server is routing', aliases: '-a', required: false
       method_option :device, desc: 'The network device used for forwarding traffic', aliases: '-d', required: false
+      method_option :private_key, desc: 'The private key of the new server', aliases: '-P', required: false
       def add(name)
         warn "Using database #{repository.path}" if options[:verbose]
         server = Server.new(name: name, ip: ip, allowed_ips: options[:allowed_ips] || repository.find_network(network))
         server.device = options[:device] if options[:device]
         server.port = options[:port] if options[:port]
+        server.private_key = options[:private_key] if options[:private_key]
         repository.add_peer(network, server)
         if options[:verbose]
           warn 'New server was successfully added:'
