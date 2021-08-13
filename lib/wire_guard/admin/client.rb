@@ -22,22 +22,25 @@ module WireGuard
     # @see https://github.com/pirate/wireguard-docs#peernodedevice
     #
     class Client
-      attr_reader :name, :ip, :private_key, :public_key
+      attr_reader :name, :ip, :public_key, :private_key
 
       # rubocop:disable Metrics/PerceivedComplexity
-      def initialize(name:, ip:, private_key: nil, public_key: nil)
+      def initialize(name:, ip:, private_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
         raise ArgumentError, 'name must not be empty' if name.empty?
         raise ArgumentError, 'ip must be present' if ip.nil?
         raise ArgumentError, 'private_key must not be empty' if private_key&.empty?
-        raise ArgumentError, 'public_key must not be empty' if public_key&.empty?
 
         @name = name
         @ip = ip
-        @private_key = private_key || generate_private_key
-        @public_key = public_key || generate_public_key
+        self.private_key = private_key || generate_private_key
       end
       # rubocop:enable Metrics/PerceivedComplexity
+
+      def private_key=(private_key)
+        @private_key = private_key
+        @public_key = generate_public_key
+      end
 
       def to_s
         "#{self.class.name.split('::').last} #{name}: #{ip}"

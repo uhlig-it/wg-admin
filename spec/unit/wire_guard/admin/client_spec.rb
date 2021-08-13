@@ -52,6 +52,14 @@ describe WireGuard::Admin::Client do
       end
     end
 
+    context 'when the private_key is provided' do
+      before { args[:private_key] = 'gE6faoepgNks6fnXawZ55A0YQx4lROJXlqxo9t24M20=' }
+
+      it 'uses the passed private key' do
+        expect(client.private_key).to eq('gE6faoepgNks6fnXawZ55A0YQx4lROJXlqxo9t24M20=')
+      end
+    end
+
     context 'when the private_key is empty' do
       before { args[:private_key] = '' }
 

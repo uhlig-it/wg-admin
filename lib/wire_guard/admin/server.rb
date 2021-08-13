@@ -20,11 +20,10 @@ module WireGuard
         ip:,
         allowed_ips:,
         private_key: nil,
-        public_key: nil,
         port: 51_820,
         device: 'eth0'
       )
-        super(name: name, ip: ip, private_key: private_key, public_key: public_key)
+        super(name: name, ip: ip, private_key: private_key)
 
         raise ArgumentError, 'port must be present' if port.nil?
         raise ArgumentError, 'port number is invalid' unless (1..65_535).cover?(port.to_i)
