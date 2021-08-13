@@ -36,6 +36,17 @@ module WireGuard
         raise Thor::Error, "Error: #{e.message}"
       end
 
+      desc 'remove NAME', 'Removes the server with the given NAME'
+      long_desc 'Removes an existing server from the configuration database.'
+      method_option :network, desc: 'network', aliases: '-n', default: default_network
+      def remove(name)
+        warn "Using database #{repository.path}" if options[:verbose]
+        repository.remove_peer(network, name)
+        warn 'Server was successfully removed.' if options[:verbose]
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
+      end
+
       desc 'list', 'Lists all servers'
       long_desc 'For a given network, lists all servers in the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network

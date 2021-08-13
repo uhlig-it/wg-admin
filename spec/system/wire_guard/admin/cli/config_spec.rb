@@ -39,7 +39,6 @@ describe 'wg-admin' do
         expect(config['Interface']).to include('ListenPort' => 51_820)
       end
 
-      # rubocop:disable RSpec/NestedGroups
       describe 'PrivateKey' do
         let(:config) { IniFile.new(content: last_command_started.stdout) }
 
@@ -55,7 +54,6 @@ describe 'wg-admin' do
           expect(config['Interface']['PrivateKey']).not_to be_empty
         end
       end
-      # rubocop:enable RSpec/NestedGroups
 
       it 'refuses to print the config of a non-existing server'
     end
@@ -87,7 +85,6 @@ describe 'wg-admin' do
         IniFile.new(content: last_command_started.stdout)
       end
 
-      # rubocop:disable RSpec/NestedGroups
       describe 'config for client foo' do
         it 'prints the PrivateKey'
 
@@ -99,7 +96,6 @@ describe 'wg-admin' do
           expect(config['Peer']).to include('AllowedIPs' => '192.168.42.0/24')
         end
       end
-      # rubocop:enable RSpec/NestedGroups
 
       it 'keeps the connection to the server alive' do
         expect(config['Peer']).to include('PersistentKeepalive' => 25)

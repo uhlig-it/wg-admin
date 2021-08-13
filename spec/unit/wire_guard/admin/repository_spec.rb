@@ -70,6 +70,20 @@ describe WireGuard::Admin::Repository do
       it 'does not allow to add another client with the same name' do
         expect { repo.add_peer(network, peer) }.to raise_error(StandardError)
       end
+
+      describe 'removing it again' do
+        before do
+          repo.remove_peer(network, peer)
+        end
+
+        it 'still lists the network' do
+          expect(repo.networks).to include(network)
+        end
+
+        it 'is no longer listed' do
+          expect(repo.clients(network)).not_to include(peer)
+        end
+      end
     end
 
     context 'when a server exists within the known network' do

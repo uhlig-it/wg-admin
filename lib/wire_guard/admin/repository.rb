@@ -44,6 +44,15 @@ module WireGuard
         end
       end
 
+      #
+      # Raised if the peer is not known
+      #
+      class UnknownPeer < StandardError
+        def initialize(peer, network)
+          super("Peer #{peer} is unknown in network #{network}.")
+        end
+      end
+
       attr_reader :path
 
       def initialize(path)
@@ -104,6 +113,9 @@ module WireGuard
         end
       end
 
+      #
+      # Delete an existing network
+      #
       def delete_network(network)
         raise ArgumentError, 'network must be an IP address range' unless network.is_a?(IPAddr)
 
@@ -124,6 +136,25 @@ module WireGuard
           raise UnknownNetwork, network unless @backend.root?(network)
 
           @backend[network] << peer
+        end
+      end
+
+      #
+      # Remove a peer from the given network
+      #
+      def remove_peer(network, peer_or_name)
+        name = if peer_or_name.respond_to?(:name)
+                 peer_or_name.name
+               else
+                 peer_or_name
+               end
+
+        raise UnknownPeer.new(name, network) unless find_peer(network, name)
+
+        @backend.transaction do
+          raise UnknownNetwork, network unless @backend.root?(network)
+
+          @backend[network].delete(name)
         end
       end
 

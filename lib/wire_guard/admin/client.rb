@@ -24,7 +24,7 @@ module WireGuard
     class Client
       attr_reader :name, :ip, :private_key, :public_key
 
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def initialize(name:, ip:, private_key: nil, public_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
         raise ArgumentError, 'name must not be empty' if name.empty?
@@ -37,7 +37,7 @@ module WireGuard
         @private_key = private_key || generate_private_key
         @public_key = public_key || generate_public_key
       end
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
 
       def to_s
         "#{self.class.name.split('::').last} #{name}: #{ip}"
@@ -52,7 +52,11 @@ module WireGuard
       end
 
       def ==(other)
-        name == other.name
+        name == if other.respond_to?(:name)
+                  other.name
+                else
+                  other
+                end
       end
 
       private

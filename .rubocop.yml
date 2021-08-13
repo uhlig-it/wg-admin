@@ -38,3 +38,10 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+RSpec/NestedGroups:
+  Max: 5
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "lib/wire_guard/admin/**/*"

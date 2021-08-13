@@ -3,7 +3,6 @@
 require 'pathname'
 
 # rubocop:disable RSpec/DescribeClass
-# rubocop:disable RSpec/NestedGroups
 describe 'wg-admin' do
   describe 'clients', type: 'aruba' do
     let(:network) { '192.168.10.0/24' }
@@ -81,5 +80,4 @@ describe 'wg-admin' do
     end
   end
   # rubocop:enable RSpec/DescribeClass
-  # rubocop:enable RSpec/NestedGroups
 end
