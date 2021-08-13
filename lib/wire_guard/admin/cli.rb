@@ -51,7 +51,6 @@ Available'
       def config(name)
         warn "Using database #{repository.path}" if options[:verbose]
         peer = repository.find_peer(network, name)
-
         case peer
         when Server
           puts Templates::Server.new(peer, repository.clients(network)).render

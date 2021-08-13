@@ -65,25 +65,21 @@ module WireGuard
         Open3.popen3('wg pubkey') do |stdin, stdout, stderr, waiter|
           stdin.write(private_key)
           stdin.close
-          raise InvocationError, stderr.lines unless waiter.value.success?
-
+          raise InvocationError, stderr.read.lines unless waiter.value.success?
           stdout.read.chomp
         end
       rescue SystemCallError => e
         raise ProgramNotFoundError if e.message =~ /No such file or directory/
-
         raise
       end
 
       def generate_private_key
         Open3.popen3('wg genkey') do |_, stdout, stderr, waiter|
           raise InvocationError, stderr.lines unless waiter.value.success?
-
           stdout.read.chomp
         end
       rescue SystemCallError => e
         raise ProgramNotFoundError if e.message =~ /No such file or directory/
-
         raise
       end
     end

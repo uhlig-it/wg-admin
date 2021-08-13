@@ -17,7 +17,6 @@ module WireGuard
             [Interface]
             PrivateKey = <%= client.private_key %>
             Address = <%= client.ip %>/24
-
             <% servers.each do |server| %>
             [Peer]
             PublicKey = <%= server.public_key %>
