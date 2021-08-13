@@ -18,10 +18,9 @@ module WireGuard
       def initialize(
         name:,
         ip:,
-        private_key: nil,
+        allowed_ips:, private_key: nil,
         public_key: nil,
         port: 51_820,
-        allowed_ips:,
         device: 'eth0'
       )
         super(name: name, ip: ip, private_key: private_key, public_key: public_key)

@@ -9,6 +9,8 @@ AllCops:
   DisplayStyleGuide:
     Enabled: true
 
+  NewCops: enable
+
 Metrics/BlockLength:
   Exclude:
     - spec/**/*

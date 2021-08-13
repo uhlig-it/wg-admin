@@ -12,7 +12,6 @@ module WireGuard
       extend ClassHelpers
       include InstanceHelpers
 
-      # rubocop:disable Metrics/AbcSize
       desc 'list', 'Lists all known networks'
       long_desc 'List the networks in the configuration database.'
       def list
@@ -27,8 +26,6 @@ module WireGuard
       rescue StandardError => e
         raise Thor::Error, "Error: #{e.message}"
       end
-      # rubocop:enable Metrics/AbcSize
-
       desc 'add NETWORK', 'Adds a new network'
       long_desc 'Adds a new network to the configuration database.'
       def add(network)

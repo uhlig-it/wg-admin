@@ -9,11 +9,11 @@ module WireGuard
     #
     module ClassHelpers
       def default_network
-        if repository.networks.size != 1
-          ENV['WG_ADMIN_NETWORK']
-        else
+        if repository.networks.size == 1
           nw = repository.networks.first
           ENV.fetch('WG_ADMIN_NETWORK', "#{nw}/#{nw.prefix}")
+        else
+          ENV['WG_ADMIN_NETWORK']
         end
       end
 

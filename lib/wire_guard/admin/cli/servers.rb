@@ -11,7 +11,7 @@ module WireGuard
       extend ClassHelpers
       include InstanceHelpers
 
-      # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       desc 'add NAME', 'Adds a new server'
       long_desc 'Adds a new server with the given public DNS NAME to the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
@@ -48,7 +48,7 @@ module WireGuard
       rescue StandardError => e
         raise Thor::Error, "Error: #{e.message}"
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
     end
   end
 end
