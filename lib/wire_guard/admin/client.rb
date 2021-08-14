@@ -24,7 +24,6 @@ module WireGuard
     class Client
       attr_reader :name, :ip, :public_key, :private_key
 
-      # rubocop:disable Metrics/PerceivedComplexity
       def initialize(name:, ip:, private_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?
         raise ArgumentError, 'name must not be empty' if name.empty?
@@ -35,7 +34,6 @@ module WireGuard
         @ip = ip
         self.private_key = private_key || generate_private_key
       end
-      # rubocop:enable Metrics/PerceivedComplexity
 
       def private_key=(private_key)
         @private_key = private_key
@@ -69,20 +67,24 @@ module WireGuard
           stdin.write(private_key)
           stdin.close
           raise InvocationError, stderr.read.lines unless waiter.value.success?
+
           stdout.read.chomp
         end
       rescue SystemCallError => e
         raise ProgramNotFoundError if e.message =~ /No such file or directory/
+
         raise
       end
 
       def generate_private_key
         Open3.popen3('wg genkey') do |_, stdout, stderr, waiter|
           raise InvocationError, stderr.lines unless waiter.value.success?
+
           stdout.read.chomp
         end
       rescue SystemCallError => e
         raise ProgramNotFoundError if e.message =~ /No such file or directory/
+
         raise
       end
     end

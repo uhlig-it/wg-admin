@@ -16,7 +16,7 @@ module WireGuard
 
             [Interface]
             PrivateKey = <%= client.private_key %>
-            Address = <%= client.ip %>/24
+            Address = <%= client.ip %>/<%= network.prefix %>
             <% servers.each do |server| %>
             [Peer]
             PublicKey = <%= server.public_key %>
@@ -27,13 +27,13 @@ module WireGuard
           CLIENT_TEMPLATE
         end
 
-        attr_reader :client, :servers
+        attr_reader :client, :network, :servers
 
-        def initialize(client, servers)
+        def initialize(client:, network:, servers:)
           @client = client
+          @network = network
           @servers = servers
-          @template = self.class.template
-          super(@template)
+          super(self.class.template)
         end
 
         def render

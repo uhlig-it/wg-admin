@@ -53,9 +53,17 @@ Available'
         peer = repository.find_peer(network, name)
         case peer
         when Server
-          puts Templates::Server.new(peer, repository.clients(network)).render
+          puts Templates::Server.new(
+            server: peer,
+            network: network,
+            clients: repository.clients(network)
+          ).render
         when Client
-          puts Templates::Client.new(peer, repository.servers(network)).render
+          puts Templates::Client.new(
+            client: peer,
+            network: network,
+            servers: repository.servers(network)
+          ).render
         else
           raise "No template defined for #{peer}"
         end

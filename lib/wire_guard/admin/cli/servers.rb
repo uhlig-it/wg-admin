@@ -17,7 +17,7 @@ module WireGuard
       method_option :network, desc: 'network', aliases: '-n', default: default_network
       method_option :ip, desc: 'the (private) IP address of the new server (within the VPN)', aliases: '-i', required: false
       method_option :port, desc: 'port to listen on', aliases: '-p', required: false
-      method_option :allowed_ips, desc: 'The range of allowed IP addresses that this server is routing', aliases: '-a', required: false
+      method_option :allowed_ips, desc: 'The range of allowed IP addresses that this server is routing. Defaults to the network.', aliases: '-a', required: false
       method_option :device, desc: 'The network device used for forwarding traffic', aliases: '-d', required: false
       method_option :private_key, desc: 'The private key of the new server', aliases: '-P', required: false
       def add(name)
