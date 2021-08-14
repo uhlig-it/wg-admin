@@ -10,6 +10,7 @@ module WireGuard
     class Servers < Thor
       extend ClassHelpers
       include InstanceHelpers
+      default_command :list
 
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       desc 'add NAME', 'Adds a new server'

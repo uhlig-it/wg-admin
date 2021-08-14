@@ -10,6 +10,7 @@ module WireGuard
     class Clients < Thor
       extend ClassHelpers
       include InstanceHelpers
+      default_command :list
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       desc 'add NAME', 'Adds a new client with the given NAME'

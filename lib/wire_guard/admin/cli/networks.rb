@@ -11,6 +11,7 @@ module WireGuard
     class Networks < Thor
       extend ClassHelpers
       include InstanceHelpers
+      default_command :list
 
       desc 'list', 'Lists all known networks'
       long_desc 'List the networks in the configuration database.'

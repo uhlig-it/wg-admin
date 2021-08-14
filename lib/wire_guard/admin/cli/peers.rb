@@ -10,6 +10,7 @@ module WireGuard
     class Peers < Thor
       extend ClassHelpers
       include InstanceHelpers
+      default_command :list
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       desc 'list', 'Lists all peers'
