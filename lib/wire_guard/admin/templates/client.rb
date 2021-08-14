@@ -18,6 +18,7 @@ module WireGuard
             PrivateKey = <%= client.private_key %>
             Address = <%= client.ip %>/<%= network.prefix %>
             <% servers.each do |server| %>
+
             [Peer]
             PublicKey = <%= server.public_key %>
             EndPoint = <%= server.name %>:<%= server.port %>
@@ -33,7 +34,7 @@ module WireGuard
           @client = client
           @network = network
           @servers = servers
-          super(self.class.template)
+          super(self.class.template, trim_mode: '<>')
         end
 
         def render

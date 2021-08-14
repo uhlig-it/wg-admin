@@ -21,6 +21,7 @@ module WireGuard
             # PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o <%= server.device %> -j MASQUERADE
             # PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o <%= server.device %> -j MASQUERADE
             <% clients.each do |client| %>
+
             [Peer]
             # Name = <%= client.name %>
             PublicKey = <%= client.public_key %>
@@ -35,7 +36,7 @@ module WireGuard
           @server = server
           @network = network
           @clients = clients
-          super(self.class.template)
+          super(self.class.template, trim_mode: '<>')
         end
 
         def render
