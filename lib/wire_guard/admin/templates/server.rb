@@ -18,8 +18,12 @@ module WireGuard
             Address = <%= server.ip %>/<%= network.prefix %>
             ListenPort = <%= server.port %>
             PrivateKey = <%= server.private_key %>
-            # PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o <%= server.device %> -j MASQUERADE
-            # PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o <%= server.device %> -j MASQUERADE
+            # PostUp = iptables -A FORWARD -i %i -j ACCEPT
+            # PostUp = iptables -A FORWARD -o %i -j ACCEPT
+            # PostUp = iptables -t nat -A POSTROUTING -o <%= server.device %> -j MASQUERADE
+            # PostDown = iptables -D FORWARD -i %i -j ACCEPT
+            # PostDown = iptables -D FORWARD -o %i -j ACCEPT
+            # PostDown = iptables -t nat -D POSTROUTING -o <%= server.device %> -j MASQUERADE
             <% clients.each do |client| %>
 
             [Peer]
