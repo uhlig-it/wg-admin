@@ -5,6 +5,4 @@ before_install:
   - sudo apt-get --yes update
   - sudo apt-get --yes install wireguard
 rvm:
-- 2.6.8
-- 2.7.4
 - 3.0.2
