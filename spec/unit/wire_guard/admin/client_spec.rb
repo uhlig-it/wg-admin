@@ -66,20 +66,6 @@ describe WireGuard::Admin::Client do
       it_behaves_like('requiring valid args', /empty/)
     end
 
-    context 'when the public_key is nil' do
-      before { args[:public_key] = nil }
-
-      it 'generates the public key from the private one' do
-        expect(client.public_key).not_to be_empty
-      end
-    end
-
-    context 'when the public_key is empty' do
-      before { args[:public_key] = '' }
-
-      it_behaves_like('requiring valid args', /empty/)
-    end
-
     context 'when the wg executable is not found' do
       around do |example|
         drop_from_path('wg') do
