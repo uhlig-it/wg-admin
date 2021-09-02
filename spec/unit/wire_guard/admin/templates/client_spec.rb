@@ -6,11 +6,13 @@ require 'wire_guard/admin/templates/client'
 require 'wire_guard/admin/client'
 
 describe WireGuard::Admin::Templates::Client do
-  subject(:template) { described_class.new(
-    client: client,
-    network: network,
-    servers: servers)
-  }
+  subject(:template) do
+    described_class.new(
+      client: client,
+      network: network,
+      servers: servers
+    )
+  end
 
   context 'with no servers' do
     let(:client) do
