@@ -2,7 +2,6 @@
 
 require 'pathname'
 
-# rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'servers add', type: 'aruba' do
     let(:network) { '192.168.10.0/24' }
@@ -64,4 +63,3 @@ describe 'wg-admin' do
     end
   end
 end
-# rubocop:enable RSpec/DescribeClass

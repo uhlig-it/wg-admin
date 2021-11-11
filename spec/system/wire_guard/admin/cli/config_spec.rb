@@ -2,7 +2,6 @@
 
 require 'inifile'
 
-# rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'config', type: 'aruba' do
     let(:network) { '192.168.42.0/24' }
@@ -103,4 +102,3 @@ describe 'wg-admin' do
     end
   end
 end
-# rubocop:enable RSpec/DescribeClass

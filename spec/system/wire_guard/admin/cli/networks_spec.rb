@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'networks', type: 'aruba' do
     before do
@@ -60,4 +59,3 @@ describe 'wg-admin' do
     end
   end
 end
-# rubocop:enable RSpec/DescribeClass

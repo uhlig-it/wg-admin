@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable RSpec/DescribeClass
 describe 'wg-admin' do
   describe 'help', type: 'aruba' do
     before do
@@ -15,5 +14,4 @@ describe 'wg-admin' do
       expect(last_command_started).to have_output(/WireGuard/)
     end
   end
-  # rubocop:enable RSpec/DescribeClass
 end
