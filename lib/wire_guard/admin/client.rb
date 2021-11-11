@@ -22,7 +22,8 @@ module WireGuard
     # @see https://github.com/pirate/wireguard-docs#peernodedevice
     #
     class Client
-      attr_reader :name, :ip, :public_key, :private_key
+      attr_reader :ip, :public_key, :private_key
+      attr_accessor :name
 
       def initialize(name:, ip:, private_key: nil)
         raise ArgumentError, 'name must be present' if name.nil?

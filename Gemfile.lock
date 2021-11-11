@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wg-admin (0.0.3)
+    wg-admin (0.0.4)
       thor
 
 GEM

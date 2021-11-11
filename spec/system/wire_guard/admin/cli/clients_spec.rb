@@ -49,6 +49,12 @@ describe 'wg-admin' do
         it 'fails when trying to add the same name again' do
           expect { run_command_and_stop 'wg-admin clients add Alice' }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
         end
+
+        it 'can be renamed' do
+          run_command_and_stop 'wg-admin clients rename Alice Bob'
+          # only on verbose
+          # expect(last_command_started.stderr).to include('Bob')
+        end
       end
 
       it 'does not accept the same ip twice'

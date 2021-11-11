@@ -43,6 +43,22 @@ module WireGuard
         raise Thor::Error, "Error: #{e.message}"
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      desc 'rename FROM TO', 'Renames the client FROM to TO'
+      long_desc 'Renames an existing client.'
+      method_option :network, desc: 'network', aliases: '-n', default: default_network
+      def rename(from, to)
+        warn "Using database #{repository.path}" if options[:verbose]
+        to_client = repository.remove_peer(network, from)
+        to_client.name = to
+        repository.add_peer(network, to_client)
+        if options[:verbose]
+          warn "Client was successfully renamed from #{from} to #{to_client.name}."
+        end
+      rescue StandardError => e
+        raise Thor::Error, "Error: #{e.message}"
+      end
+
       desc 'list', 'Lists all clients'
       long_desc 'For a given network, lists all clients in the configuration database.'
       method_option :network, desc: 'network', aliases: '-n', default: default_network
